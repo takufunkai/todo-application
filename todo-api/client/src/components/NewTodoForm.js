@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { TextField, IconButton } from '@material-ui/core'
+import PublishIcon from '@material-ui/icons/Publish'
 
 const NewTodoForm = props => {
   const [todo, setTodo] = useState(props.initialFormState);
@@ -8,18 +10,32 @@ const NewTodoForm = props => {
     setTodo({ ...todo, [name]: value })
   };
 
-  return (
-      <form onSubmit={event => {
-        event.preventDefault()
-        if (!todo.title) return; //depends if we need to prev default tag
+  const handleSubmit = event => {
         props.addTodo(todo)
         setTodo(props.initialFormState)
-      }}>
-        <label>Title</label>
-        <input type="text" name="title" value={todo.title} onChange={handleInputChange} ></input>
-        <label>Tag</label>
-        <input type="text" name="tag" value={todo.tag} onChange={handleInputChange} ></input>
-        <button>Create Todo</button>
+  }
+
+  return (
+      <form>
+        <TextField 
+          id="outlined-basic" 
+          label="Title" 
+          variant="outlined" 
+          type="text" 
+          name="title" 
+          value={todo.title} 
+          onChange={handleInputChange} />
+        <TextField 
+          id="outlined-basic" 
+          label="Tag" 
+          variant="outlined"
+          type="text" 
+          name="tag" 
+          value={todo.tag} 
+          onChange={handleInputChange} />
+        <IconButton onClick={() => handleSubmit()}>
+          <PublishIcon />
+        </IconButton>
       </form>
   )
 };

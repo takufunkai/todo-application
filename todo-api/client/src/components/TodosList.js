@@ -28,6 +28,8 @@ const TodosList = props => {
 
   const [editing, setEditing] = useState(false);
   const [currentTodo, setCurrentTodo] = useState(initialFormState);
+  const completedTodos = todos.filter(todo => todo.done === true)
+  const pendingTodos = todos.filter(todo => todo.done === false)
 
   const addTodo = todo => {
       const qs = require('qs');
@@ -79,7 +81,7 @@ const TodosList = props => {
 
   };
   
-  const updateTodo = (updatedTodo) => {
+  const updateTodo = updatedTodo => {
     setEditing(false);
 
     const qs = require('qs');
@@ -108,12 +110,29 @@ const TodosList = props => {
               updateTodo={updateTodo}
             />
           ) : (
-            <NewTodoForm addTodo={addTodo} initialFormState={initialFormState} />
+            <NewTodoForm 
+              addTodo={addTodo} 
+              initialFormState={initialFormState} 
+            />
           )}
         </div>
         <br/>
         <hr/>
-        {todos.map((todo, _) => (
+        <h1>Tasks</h1>
+        {pendingTodos.map((todo, _) => (
+            <Todo 
+              key={todo.id} 
+              todo={todo} 
+              removeTodo={removeTodo} 
+              editTodo={editTodo} 
+              editing={editing} 
+              completeTodo={completeTodo} 
+              />
+        ))}
+        <hr />
+        <hr />
+        <h1>Completed</h1>
+        {completedTodos.map((todo, _) => (
             <Todo 
               key={todo.id} 
               todo={todo} 

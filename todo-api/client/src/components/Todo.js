@@ -1,21 +1,32 @@
 import React from 'react';
+import { Button } from '@material-ui/core';
 
 const Todo = ({ 
   todo, removeTodo, editTodo, editing, completeTodo 
   }) => (
-    <div className="todo" style={{ textDecoration: todo.done ? "line-through" : "" }} >
+    <div className="todo" >
       <h4>{todo.title}</h4>
       <p>{todo.tag}</p>
 
-      {editing ? (null
+      {editing || todo.done ? (null
       ) : (
-          <button
+          <Button
             onClick={() => {editTodo(todo)}}
-          >Edit</button>
+          >Edit</Button>
       )}
       
-      <button onClick={() => removeTodo(todo.id)}>Delete</button>
-      <button onClick={() => completeTodo(todo)}>Complete</button>
+      <Button onClick={() => removeTodo(todo.id)}>Delete</Button>
+
+     {todo.done ? (
+        <Button 
+          onClick={() => completeTodo(todo)}
+        >Undo complete</Button>
+     ) : (
+        <Button 
+          onClick={() => completeTodo(todo)}
+        >Complete</Button>
+     )}
+     <hr width="10%"/>
     </div>
 );
 
