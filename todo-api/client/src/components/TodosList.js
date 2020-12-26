@@ -4,16 +4,22 @@ import NewTodoForm from './NewTodoForm';
 import Todo from './Todo';
 import EditTodoForm from './EditTodoForm';
 
+
 const TodosList = props => {
 
-  const apiUrl = '/api/v1/todos';
+  const apiUrl = '/api/v1/todos/';
 
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    axios.get(apiUrl)
-        .then(res => setTodos(res.data))
-      }, [todos]);
+    let ignore = false;
+    const fetchTodo = async () => {
+      const res = await axios.get(apiUrl);
+      if (!ignore) setTodos(res.data);
+    };
+    fetchTodo();
+    return (() => {ignore = true; });
+  }, [todos]);
 
   const initialFormState = {
     title:'',
@@ -30,16 +36,17 @@ const TodosList = props => {
           {
               todo:{
                   title: todo.title,
-                  tag: todo.tag}
+                  tag: todo.tag,
+                  done: false}
         }))
         .then(res=>(console.log(res.id)))
         .catch( error => console.log(error))
 
-    setTodos([...todos, todo]);
+      setTodos([...todos, todo]);
   }
 
   const removeTodo = id => {
-    axios.delete( '/api/v1/todos/' + id )
+    axios.delete( apiUrl + id )
         .then(response => {
           setTodos(todos.filter(todo => todo.id !== id))
         })
@@ -56,12 +63,27 @@ const TodosList = props => {
       done: todo.done
     })
   }
+
+  const completeTodo = completedTodo => {
+    const qs = require('qs');
+    axios.patch(apiUrl + completedTodo.id, qs.stringify(
+      {
+        todo: {
+          done: !completedTodo.done
+        }
+      }
+    ))
+      .then(res => console.log(res.data));
+
+    setTodos(todos.map(todo => (todo.id === completedTodo.id ? completedTodo : todo)))
+
+  };
   
   const updateTodo = (updatedTodo) => {
     setEditing(false);
 
     const qs = require('qs');
-    axios.patch('api/v1/todos/' + updatedTodo.id, qs.stringify(
+    axios.patch(apiUrl + updatedTodo.id, qs.stringify(
       {
         todo: {
           title: updatedTodo.title,
@@ -92,7 +114,14 @@ const TodosList = props => {
         <br/>
         <hr/>
         {todos.map((todo, _) => (
-            <Todo key={todo.created_at} todo={todo} removeTodo={removeTodo} editTodo={editTodo} editing={editing} />
+            <Todo 
+              key={todo.id} 
+              todo={todo} 
+              removeTodo={removeTodo} 
+              editTodo={editTodo} 
+              editing={editing} 
+              completeTodo={completeTodo} 
+              />
         ))}
       </div>
     </div>
