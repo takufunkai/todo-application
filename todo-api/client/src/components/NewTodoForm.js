@@ -11,7 +11,7 @@ const NewTodoForm = props => {
   return (
       <form onSubmit={event => {
         event.preventDefault()
-        if (!todo.title | !todo.tag) return; //depends if we need to prev default tag
+        if (!todo.title) return; //depends if we need to prev default tag
         props.addTodo(todo)
         setTodo(props.initialFormState)
       }}>

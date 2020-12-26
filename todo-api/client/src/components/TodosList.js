@@ -6,30 +6,33 @@ import EditTodoForm from './EditTodoForm';
 
 const TodosList = props => {
 
+  const apiUrl = '/api/v1/todos';
+
+  const [todos, setTodos] = useState([]);
+
   useEffect(() => {
-    axios.get('/api/v1/todos.json')
+    axios.get(apiUrl)
         .then(res => setTodos(res.data))
-      }, []);
+      }, [todos]);
 
   const initialFormState = {
     title:'',
     tag:''
     };
 
-  const [todos, setTodos] = useState([]);
   const [editing, setEditing] = useState(false);
   const [currentTodo, setCurrentTodo] = useState(initialFormState);
 
   const addTodo = todo => {
       const qs = require('qs');
 
-      axios.post('/api/v1/todos', qs.stringify(
+      axios.post(apiUrl, qs.stringify(
           {
               todo:{
                   title: todo.title,
                   tag: todo.tag}
         }))
-        .then(res=>(console.log(res)))
+        .then(res=>(console.log(res.id)))
         .catch( error => console.log(error))
 
     setTodos([...todos, todo]);
@@ -41,6 +44,7 @@ const TodosList = props => {
           setTodos(todos.filter(todo => todo.id !== id))
         })
         .catch(error => console.log(error))
+
   };
 
   const editTodo = todo => {
@@ -88,7 +92,7 @@ const TodosList = props => {
         <br/>
         <hr/>
         {todos.map((todo, _) => (
-            <Todo todo={todo} removeTodo={removeTodo} editTodo={editTodo} editing={editing} />
+            <Todo key={todo.created_at} todo={todo} removeTodo={removeTodo} editTodo={editTodo} editing={editing} />
         ))}
       </div>
     </div>
