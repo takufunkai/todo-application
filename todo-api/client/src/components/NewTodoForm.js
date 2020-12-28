@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { TextField, IconButton } from '@material-ui/core'
 import PublishIcon from '@material-ui/icons/Publish'
+import API from '../API';
 
-const NewTodoForm = props => {
-  const [todo, setTodo] = useState(props.initialFormState);
+const NewTodoForm = () => {
+  const { addTodo, initialFormState } = API();
+  const [todo, setTodo] = useState(initialFormState);
 
   const handleInputChange = event => {
     const { name, value } = event.target
@@ -11,12 +13,13 @@ const NewTodoForm = props => {
   };
 
   const handleSubmit = event => {
-        props.addTodo(todo)
-        setTodo(props.initialFormState)
+        if (!todo.title) return;
+        addTodo(todo)
+        setTodo(initialFormState)
   }
 
   return (
-      <form>
+      <form> 
         <TextField 
           id="outlined-basic" 
           label="Title" 

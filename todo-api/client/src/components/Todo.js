@@ -4,8 +4,9 @@ import { Button } from '@material-ui/core';
 const Todo = ({ 
   todo, removeTodo, editTodo, editing, completeTodo 
   }) => (
+
     <div className="todo" >
-      <h4>{todo.title}</h4>
+      {todo && <h4>{todo.title}</h4>}
       <p>{todo.tag}</p>
 
       {editing || todo.done ? (null

@@ -1,16 +1,22 @@
 import React from 'react';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
-import TodosList from './components/TodosList';
-import Header from './components/UI/Header';
+import TodosList from './TodoList/TodosList';
+import Header from './UI/Header';
+import CompletedList from './TodoList/CompletedList';
 
 function App() {
 
   return (
-    <div className="App">
+    <Router>
+      <div className="App">
         <Header />
-        <br/>
-        <TodosList />
       </div>
+        <div className="App">
+          <Route path="/" exact component={TodosList} />
+          <Route path="/completed" component={CompletedList} />
+        </div>
+    </Router>
   );
 }
 
