@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NewTodoForm from './NewTodoForm';
 import Todo from './Todo';
-import EditTodoForm from './EditTodoForm';
+import { Divider, Paper } from '@material-ui/core';
 
 const TodosList = props => {
 
@@ -12,8 +12,6 @@ const TodosList = props => {
   };
 
   const [todos, setTodos] = useState([]);
-  const [editing, setEditing] = useState(false);
-  const [currentTodo, setCurrentTodo] = useState(initialFormState);
   const [complete, setComplete] = useState(false);
 
   useEffect(() => {
@@ -37,19 +35,8 @@ const TodosList = props => {
     
     setTodos([...todos, todo]);
   };
-
-  const editTodo = todo => {
-    setEditing(true);
-    setCurrentTodo({
-      id: todo.id,
-      title: todo.title,
-      tag: todo.tag,
-      done: todo.done
-    })
-  };
   
   const updateTodo = (updatedTodo) => {
-    setEditing(false);
   
     const qs = require('qs');
     axios.patch('/api/v1/todos/' + updatedTodo.id, qs.stringify(
@@ -93,22 +80,17 @@ const TodosList = props => {
     <div>
       <div className="todos-list">
         <div>
-          {editing ? (
-            <EditTodoForm
-                setEditing={setEditing}
-                currentTodo={currentTodo}
-                updateTodo={updateTodo}
-            />
-          ) : (
-            <NewTodoForm addTodo={addTodo} initialFormState={initialFormState}/>
-          )}
+          <NewTodoForm addTodo={addTodo} initialFormState={initialFormState}/>
         </div>
         <br/>
         <hr/>
-        <h1>Tasks</h1>
-        {todos.filter(todo => !todo.done).map((todo, _) => (
-            <Todo key={todo.id} todo={todo} removeTodo={removeTodo} editTodo={editTodo} editing={editing} toggleComplete={toggleComplete}/>
-          ))}
+        <Paper>
+          <h1>Tasks</h1>
+          <Divider variant="middle" />
+          {todos.filter(todo => !todo.done).map((todo, _) => (
+            <Todo key={todo.id} updateTodo={updateTodo} todo={todo} removeTodo={removeTodo} toggleComplete={toggleComplete}/>
+            ))}
+        </Paper>
       </div>
     </div>
 )

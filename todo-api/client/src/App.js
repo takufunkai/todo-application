@@ -4,18 +4,19 @@ import './App.css';
 import TodosList from './TodoList/TodosList';
 import Header from './UI/Header';
 import CompletedList from './TodoList/CompletedList';
+import { Grid , Paper } from '@material-ui/core';
 
 function App() {
 
   return (
     <Router>
-      <div className="App">
-        <Header />
-      </div>
-        <div className="App">
+      <Grid>
+          <Header />
+      </Grid>
+      <Grid container justify="center">
           <Route path="/" exact component={TodosList} />
           <Route path="/completed" component={CompletedList} />
-        </div>
+      </Grid>
     </Router>
   );
 }

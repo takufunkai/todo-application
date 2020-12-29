@@ -1,23 +1,32 @@
 import React from 'react';
+import EditTodoForm from './EditTodoForm';
+import { Card, Button, Grid, Typography, Checkbox } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-const Todo = ({ todo, removeTodo, editTodo, editing, toggleComplete }) => (
-    <div className="todo" key={todo.id}>
-      <h4>{todo.title}</h4>
-      <p>{todo.tag}</p>
+const Todo = ({ 
+    todo, removeTodo, toggleComplete, updateTodo
+  }) => (
+    <Grid container direction="row">
+        <Grid container direction="row" alignItems="center">
+            <Grid item>
+               <Checkbox checked={todo.done} onChange={() => toggleComplete(todo)}/>
+            </Grid>
+            <Grid item xs>
+                <Typography variant="h5">{todo.title}</Typography>
+                {todo.tag}
+            </Grid>
+        </Grid>
 
-      {editing || todo.done ? (null
-      ) : (
-          <button
-              onClick={() => {editTodo(todo)}}
-          >Edit</button>
-      )}
-
-
-      <button onClick={() => removeTodo(todo.id)}>Remove</button>
-      <button onClick={() => toggleComplete(todo)}>
-          {todo.done ? <>Undo Complete</> : <>Complete</> }
-      </button>
-    </div>
+        <Grid container justify="flex-end">
+            {todo.done ? (null
+            ) : (
+                <EditTodoForm key={todo.id} updateTodo={updateTodo} todo={todo} /> 
+                )}
+            <Button color="primary" onClick={() => removeTodo(todo.id)}>
+                <DeleteIcon />
+            </Button>
+        </Grid>
+    </Grid>
 );
 
 export default Todo;
