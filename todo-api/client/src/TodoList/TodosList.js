@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NewTodoForm from './NewTodoForm';
 import Todo from './Todo';
-import { Divider, Paper } from '@material-ui/core';
+import { Divider, Paper, Grid, FormControl, 
+  InputLabel, Select, MenuItem, TextField } from '@material-ui/core';
 
 const TodosList = props => {
 
@@ -14,15 +15,21 @@ const TodosList = props => {
   const [todos, setTodos] = useState([]);
   const [complete, setComplete] = useState(false);
 
+  const [search, setSearch] = useState('');
+  const [searchType, setSearchType] = useState('title')
+
   useEffect(() => {
     axios.get('/api/v1/todos.json')
         .then(res => setTodos(res.data))
       }, [JSON.stringify(todos), complete]);
 
+  const handleTypeChange = (event) => {
+    setSearchType(event.target.value);
+  }
+
 
   const addTodo = todo => {
     const qs = require('qs');
-  
     axios.post('/api/v1/todos/', qs.stringify(
         {
           todo:{
@@ -37,7 +44,6 @@ const TodosList = props => {
   };
   
   const updateTodo = (updatedTodo) => {
-  
     const qs = require('qs');
     axios.patch('/api/v1/todos/' + updatedTodo.id, qs.stringify(
         {
@@ -80,6 +86,26 @@ const TodosList = props => {
     <div>
       <div className="todos-list">
         <div>
+          <Grid container justify="center" alignItems="center">
+            <FormControl spacing={2} maxWidth>
+              <InputLabel>Search by...</InputLabel>
+              <Select
+                value={searchType}
+                onChange={handleTypeChange}
+                >
+                <MenuItem value="title">Task Name</MenuItem>
+                <MenuItem value="tag">Tag</MenuItem>
+              </Select>
+              <TextField 
+                variant="outlined" 
+                placeholder="Search..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                />
+            </FormControl>
+          </Grid>
+        </div>
+        <div>
           <NewTodoForm addTodo={addTodo} initialFormState={initialFormState}/>
         </div>
         <br/>
@@ -87,9 +113,15 @@ const TodosList = props => {
         <Paper>
           <h1>Tasks</h1>
           <Divider variant="middle" />
-          {todos.filter(todo => !todo.done).map((todo, _) => (
-            <Todo key={todo.id} updateTodo={updateTodo} todo={todo} removeTodo={removeTodo} toggleComplete={toggleComplete}/>
-            ))}
+          {
+              todos.filter(search ? todo => searchType === 'title' 
+                                    ? todo.title.includes(search) 
+                                    :  todo.tag.includes(search) 
+                                  : todo => !todo.done).slice(0).reverse().map((todo, _) => (
+              <Todo key={todo.id} updateTodo={updateTodo} todo={todo} removeTodo={removeTodo} toggleComplete={toggleComplete}/>
+              )
+            )
+          }
         </Paper>
       </div>
     </div>

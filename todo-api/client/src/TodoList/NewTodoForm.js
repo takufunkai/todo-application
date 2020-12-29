@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid } from '@material-ui/core'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
@@ -11,6 +11,7 @@ const NewTodoForm = props => {
   };
 
   const handleSubmit = event => {
+    console.log('Handling...' + JSON.stringify(todo))
     if (!todo.title) return;
     props.addTodo(todo)
     setTodo(props.initialFormState)
@@ -19,12 +20,32 @@ const NewTodoForm = props => {
   return (
       <Grid container spacing={4}>
         <Grid item>
-            <TextField placeholder="title" type="text" name="title" value={todo.title} onChange={handleInputChange} />
+            <TextField 
+                placeholder="title" 
+                type="text" 
+                name="title" 
+                value={todo.title} 
+                onChange={handleInputChange}
+                onKeyPress={(ev) => {
+                    if (ev.key === 'Enter') {
+                        handleSubmit();
+                    }
+                }} />
         </Grid>
         <Grid item> 
-            <TextField placeholder="tag"type="text" name="tag" value={todo.tag} onChange={handleInputChange} />
+            <TextField 
+                placeholder="tag"
+                type="text" 
+                name="tag" 
+                value={todo.tag} 
+                onChange={handleInputChange}
+                onKeyPress={(ev) => {
+                    if (ev.key === 'Enter') {
+                        handleSubmit();
+                    }
+                }} />
         </Grid>
-        <Button color="primary" onClick={handleSubmit}>
+        <Button type="submit" color="primary" onClick={handleSubmit}>
             <AddCircleOutlineIcon height={2}/>
         </Button>
       </Grid>
