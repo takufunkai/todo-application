@@ -1,12 +1,12 @@
 # CVWO 2020 Assignment Submission -- TodoList
 
-##Name
+## Name
 Ezekiel Toh Fun Kai
 
-##Matriculation Number
+## Matriculation Number
 A0218061N
 
-##Remarks
+## Remarks
 Rails 6.1 API
 React Boot-strapped with create-react-app
 Heroku (local)
