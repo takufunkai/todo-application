@@ -1,24 +1,12 @@
-# README
+# CVWO 2020 Assignment Submission -- TodoList
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+##Name
+Ezekiel Toh Fun Kai
 
-Things you may want to cover:
+##Matriculation Number
+A0218061N
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+##Remarks
+Rails 6.1 API
+React Boot-strapped with create-react-app
+Heroku (local)
