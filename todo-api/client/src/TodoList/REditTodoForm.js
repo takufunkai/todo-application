@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { todoUpdated } from './todosSlice'
+import { todoUpdated, selectTodoById } from './todosSlice'
 
 export const EditTodoForm = ({ match }) => {
   const { todoId } = match.params //figure out props
 
-  const todo = useSelector(state =>
-    state.todos.find(todo => todo.id === todoId)
-  )
+  const todo = useSelector(state =>selectTodoById(state, todoId))
 
   const [title, setTitle] = useState(todo.title)
-  const [tag, setTag] = useState(tag.content)
+  const [tag, setTag] = useState(todo.tag)
 
   const dispatch = useDispatch()
 

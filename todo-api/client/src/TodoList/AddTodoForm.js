@@ -1,36 +1,38 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { unwrapResult } from '@reduxjs/toolkit'
 
-import { todoAdded } from './todosSlice'
+import { addNewTodo } from './todosSlice'
 
 export const AddTodoForm = () => {
   const [title, setTitle] = useState('')
   const [tag, setTag] = useState('')
-  const [userId, setUserId] = useState('')
+  const [addRequestStatus, setAddRequestStatus] = useState('idle')
 
   const dispatch = useDispatch()
 
-  const users = useSelector(state => state.users)
-
   const onTitleChanged = e => setTitle(e.target.value)
   const onTagChanged = e => setTag(e.target.value)
-  const onAuthorChanged = e => setUserId(e.target.value)
 
-  const onSaveTodoClicked = () => {
-    if (title && tag) {
-      dispatch(todoAdded(title, tag, userId))
-      setTitle('')
-      setTag('')
+  const canSave = [title, tag].every(Boolean) && addRequestStatus === 'idle'
+
+  const onSaveTodoClicked = async () => {
+    if (canSave) {
+      try {
+        setAddRequestStatus('pending')
+        const resultAction = await dispatch(
+          addNewTodo({ title, tag })
+        )
+        unwrapResult(resultAction)
+        setTitle('')
+        setTag('')
+      } catch (err) {
+        console.error('Failed to save the todo: ', err)
+      } finally {
+        setAddRequestStatus('idle')
+      }
     }
   }
-
-  const canSave = Boolean(title) && Boolean(tag) && Boolean(userId)
-
-  const usersOptions = users.map(user => (
-    <option key={user.id} value={user.id}>
-      {user.name}
-    </option>
-  ))
 
   return (
     <section>
@@ -45,10 +47,6 @@ export const AddTodoForm = () => {
           onChange={onTitleChanged}
         />
         <label htmlFor="postAuthor">Author:</label>
-        <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
-          <option value=""></option>
-          {usersOptions}
-        </select>
         <label htmlFor="todoTag">Tag:</label>
         <textarea
           id="todoTag"

@@ -4,16 +4,43 @@ import { useDispatch, useSelector } from 'react-redux';
 import NewTodoForm from './NewTodoForm';
 import { Divider, Paper, Grid, FormControl, 
   InputLabel, Select, MenuItem, TextField } from '@material-ui/core';
+import { selectAllTodos, selectTodoById, fetchTodos } from './todosSlice';
 
-const TodosList = props => {
-  const todos = useSelector(state => state.todos)
+let TodoItem = ({ todoId }) => {
+  const todo = useSelector((state) => selectTodoById(state, todoId))
 
-  const renderedTodos = todos.map(todo => (
-    <article key={todo.id}>
+  return (
+    <article className="todo-item" key={todo.id}>
       <h3>{todo.title}</h3>
       <p>{todo.tag}</p>
     </article>
-  ))
+  )
+}
+
+const TodosList = props => {
+  const dispatch = useDispatch()
+  const todos = useSelector(selectAllTodos)
+
+  const todoStatus = useSelector(state => state.todos.status)
+  const error = useSelector(state => state.todos.error)
+
+  useEffect(() => {
+    if (todoStatus === 'idle') {
+      dispatch(fetchTodos())
+    }
+  }, [todoStatus, dispatch])
+
+  let content
+
+  if (todoStatus === 'loading') {
+    content = <div className="loader">Loading...</div>
+  } else if (todoStatus === 'succeeded') {
+    content = todos.map(todo => (
+      <TodoItem key={todo.id} todoId={todo.id} />
+    ))
+  } else if (todoStatus === 'failed') {
+    content = <div>{error}</div>
+  }
 
 
   //<-- REDUX FUNCTIONS END HERE --> 
@@ -105,45 +132,20 @@ const TodosList = props => {
   // };
 
   return (
-    // <div>
-    //   <div className="todos-list">
-    //     <div>
-    //       <Grid container justify="center" alignItems="center">
-    //         <FormControl spacing={2} maxWidth>
-    //           <InputLabel>Search by...</InputLabel>
-    //           <Select
-    //             value={searchType}
-    //             onChange={handleTypeChange}
-    //             >
-    //             <MenuItem value="title">Task Name</MenuItem>
-    //             <MenuItem value="tag">Tag</MenuItem>
-    //           </Select>
-    //           <TextField 
-    //             variant="outlined" 
-    //             placeholder="Search..."
-    //             value={search}
-    //             onChange={e => setSearch(e.target.value)}
-    //             />
-    //         </FormControl>
-    //       </Grid>
-    //     </div>
-    //     <div>
-    //       <NewTodoForm addTodo={addTodo} initialFormState={initialFormState}/>
-    //     </div>
-    //     <br/>
-    //     <hr/>
-    //     <Paper>
-    //       <h1>Tasks</h1>
-    //       <Divider variant="middle" />
-    //       {renderedTodos}
-    //     </Paper>
-    //   </div>
-    // </div>
     <div>
-      <h1>Tasks</h1>
-      <Divider variant="middle" />
-      {renderedTodos}
+      <div className="todos-list">
+        <div>
+          <Grid container justify="center" alignItems="center">
+          </Grid>
+        </div>
+        <hr/>
+        <Paper>
+          <h1>Tasks</h1>
+          <Divider variant="middle" />
+          {content}
+        </Paper>
+      </div>
     </div>
-)
+  )
 };
 export default TodosList;
