@@ -1,24 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Divider, Paper, Typography } from '@material-ui/core';
-import { selectTodoById, fetchTodos, selectCompleteTodos, selectIncompleteTodos } from './todosSlice';
-import { DeleteTodoButton } from './DeleteTodo'
-import { EditTodoForm } from './EditTodoForm'
-import { ToggleCompleteButton } from './ToggleCompleteButton';
-
-let TodoItem = ({ todoId }) => {
-  const todo = useSelector((state) => selectTodoById(state, todoId))
-
-  return (
-    <article className="todo-item" >
-      <Typography variant='h4' >{todo.title}</Typography>
-      <p>{todo.tag}</p>
-      <DeleteTodoButton id={todoId} />
-      {todo.done ? null : <EditTodoForm todo={todo} />}
-      <ToggleCompleteButton todo={todo} />
-    </article>
-  )
-}
+import { Divider, Paper } from '@material-ui/core';
+import { fetchTodos, selectCompleteTodos, selectIncompleteTodos } from './todosSlice';
+import { TodoItem } from './TodoItem'
 
 const TodosList = props => {
   const dispatch = useDispatch()

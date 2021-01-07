@@ -2,6 +2,8 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { deleteTodo } from './todosSlice'
+import DeleteIcon from '@material-ui/icons/Delete'
+import { Button } from '@material-ui/core'
 
 export const DeleteTodoButton = ({ id }) => {
   const dispatch = useDispatch()
@@ -20,6 +22,8 @@ export const DeleteTodoButton = ({ id }) => {
   }
 
   return (
-    <button onClick={handleDelete}>Delete</button>
+    <Button onClick={handleDelete}>
+      <DeleteIcon />
+    </Button>
   )
 }
