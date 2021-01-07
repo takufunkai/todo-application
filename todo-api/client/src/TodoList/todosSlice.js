@@ -1,13 +1,13 @@
-import { createSlice, nanoid, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-//stand-in data before introducing AJAX
 const initialState = {
   todos: [],
   status: 'idle',
   error: null
 }
 
+//actions
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
   const response = await axios.get('/api/v1/todos/')
   console.log(response.data, 'todosSlice: fetched from rails')
@@ -18,62 +18,88 @@ export const addNewTodo = createAsyncThunk(
   'todos/addNewTodos',
   async initialTodo => {
     const response = await axios.post('/api/v1/todos', { todo: initialTodo })
+    console.log('added todo:', response.data)
     return response.data
+  }
+)
+
+export const deleteTodo = createAsyncThunk(
+  'todos/deleteTodo',
+  async id => {
+    console.log('initializing delete of:', id)
+    await axios.delete( '/api/v1/todos/' + id)
+    return id;
+  }
+);
+
+export const updateTodo = createAsyncThunk(
+  'todos/updateTodo',
+  async updatedTodo => {
+    console.log('initializing update of:', updatedTodo.id)
+    await axios.patch('/api/v1/todos/' + updatedTodo.id, { todo: updatedTodo })
+    return updatedTodo
+  }
+)
+
+export const toggleComplete = createAsyncThunk(
+  'todos/toggleComplete',
+  async doneTodo => {
+    console.log('toggling "done" id:', doneTodo.id)
+    await axios.patch('/api/v1/todos/' + doneTodo.id, { todo: {
+        done: !doneTodo.done
+    } })
+    return doneTodo.id
   }
 )
 
 const todosSlice = createSlice({
   name: 'todos',
   initialState,
-  reducers: {
-    todoAdded: {
-      reducer(state, action) {
-        state.todos.push(action.payload)
-      },
-      prepare(title, tag, userId) {
-        return {
-          payload: {
-            id: nanoid(),
-            title,
-            tag,
-            user: userId
-          }
-        }
+  reducers: {},
+  extraReducers: {
+    [fetchTodos.pending]: (state, action) => {
+      state.status = 'loading'
+    },
+    [fetchTodos.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+      // Add any fetched todos to the array
+      state.todos = state.todos.concat(action.payload)
+      console.log('todosSlice: successfully fetched')
+    },
+    [fetchTodos.rejected]: (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message
+    },
+    [addNewTodo.fulfilled]: (state, action) => {
+      state.todos.push(action.payload)
+      console.log(state.todos.length)       
+    },
+    [deleteTodo.fulfilled]: (state, action) => {
+      state.todos = state.todos.filter((todo) => todo.id !== action.payload)
+    },
+    [updateTodo.fulfilled]: (state, action) => {
+      const existingTodo = state.todos.find(todo => todo.id === action.payload.id)
+      if (existingTodo) {
+        existingTodo.title = action.payload.title
+        existingTodo.tag = action.payload.tag
       }
     },
-    todoUpdated(state, action) {
-      const { id, title, tag } = action.payload
-      const existingTodo = state.todos.find(todo => todo.id === id)
+    [toggleComplete.fulfilled]: (state, action) => {
+      const existingTodo = state.todos.find(todo => todo.id === action.payload)
       if (existingTodo) {
-        existingTodo.title = title
-        existingTodo.tag = tag
+        existingTodo.done = !existingTodo.done
       }
-    }
-  },
-  extraReducers: {
-      [fetchTodos.pending]: (state, action) => {
-        state.status = 'loading'
-      },
-      [fetchTodos.fulfilled]: (state, action) => {
-        state.status = 'succeeded'
-        // Add any fetched todos to the array
-        state.todos = state.todos.concat(action.payload)
-        console.log('todosSlice: successfully fetched')
-      },
-      [fetchTodos.rejected]: (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message
-      },
-      [addNewTodo.fulfilled]: (state, action) => {
-        state.todos.push(action.payload)
-      }
+    },
   }
 })
 
-export const { todoAdded, todoUpdated } = todosSlice.actions
-
 export default todosSlice.reducer
 
+//state selectors
 export const selectAllTodos = state => state.todos.todos
+
+export const selectCompleteTodos = state => state.todos.todos.filter(todo => todo.done)
+
+export const selectIncompleteTodos = state => state.todos.todos.filter(todo => !todo.done)
 
 export const selectTodoById = (state, todoId) => state.todos.todos.find(todo => todo.id === todoId)

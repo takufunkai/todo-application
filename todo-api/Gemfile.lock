@@ -91,6 +91,8 @@ GEM
     puma (5.1.1)
       nio4r (~> 2.0)
     rack (2.2.3)
+    rack-cors (1.1.1)
+      rack (>= 2.0.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.1.0)
@@ -145,6 +147,7 @@ DEPENDENCIES
   byebug
   pg (~> 1.1)
   puma (~> 5.0)
+  rack-cors
   rails (~> 6.1.0)
   tzinfo-data
 

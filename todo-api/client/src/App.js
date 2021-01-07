@@ -2,8 +2,7 @@ import React from 'react';
 import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
 import TodosList from './TodoList/TodosList';
 import { AddTodoForm } from './TodoList/AddTodoForm'
-import Header from './UI/Header';
-import CompletedList from './TodoList/CompletedList';
+import Header from './app/Header';
 import { Grid } from '@material-ui/core';
 
 function App() {
@@ -15,11 +14,16 @@ function App() {
         exact 
         render={() => (
           <React.Fragment>
-            <AddTodoForm />
-            <TodosList />
+                <Header />
+                <Grid container justify='center'>
+                  <Grid item>
+                    <AddTodoForm />
+                    <TodosList />
+                  </Grid>
+                </Grid>
           </React.Fragment>
         )} />
-      <Route path="/completed" component={CompletedList} />
+      <Route path="/completed" />
       <Redirect to='/' />
     </Router>
   );

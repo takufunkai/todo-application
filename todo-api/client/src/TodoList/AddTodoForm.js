@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { Grid, TextField, Button } from '@material-ui/core'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 import { addNewTodo } from './todosSlice'
 
@@ -35,27 +37,36 @@ export const AddTodoForm = () => {
   }
 
   return (
-    <section>
-      <h2>Add a New Todo</h2>
-      <form>
-        <label htmlFor="todoTitle">Todo Title:</label>
-        <input
-          type="text"
-          id="todoTitle"
-          name="todoTitle"
-          value={title}
-          onChange={onTitleChanged}
-        />
-        <label htmlFor="postAuthor">Author:</label>
-        <label htmlFor="todoTag">Tag:</label>
-        <textarea
-          id="todoTag"
-          name="todoTag"
-          value={tag}
-          onChange={onTagChanged}
-        />
-        <button type="button" onClick={onSaveTodoClicked} disabled={!canSave}>Save Todo</button>
-      </form>
-    </section>
+    <Grid container spacing={4}>
+        <Grid item>
+            <TextField 
+                placeholder="title" 
+                type="text" 
+                name="todoTitle" 
+                value={title} 
+                onChange={onTitleChanged}
+                onKeyPress={(ev) => {
+                    if (ev.key === 'Enter') {
+                        onSaveTodoClicked()
+                    }
+                }} />
+        </Grid>
+        <Grid item> 
+            <TextField 
+                placeholder="tag"
+                type="text" 
+                name="todoTag" 
+                value={tag} 
+                onChange={onTagChanged}
+                onKeyPress={(ev) => {
+                    if (ev.key === 'Enter') {
+                      onSaveTodoClicked();
+                    }
+                }} />
+        </Grid>
+        <Button type="submit" color="primary" onClick={onSaveTodoClicked}>
+            <AddCircleOutlineIcon height={2}/>
+        </Button>
+      </Grid>
   )
 }
