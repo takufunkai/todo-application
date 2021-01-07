@@ -1,4 +1,5 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,86 +8,88 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
+import { updateTodo } from './todosSlice'
+import { unwrapResult } from '@reduxjs/toolkit'
 
-export default function EditTodoForm(props) {
-  const [open, setOpen] = useState(false);
-  const [todo, setTodo] = useState(props.todo);
+export const EditTodoForm = ({ todo }) => {
+  const [open, setOpen] = useState(false)
+  const [title, setTitle] = useState(todo.title)
+  const [tag, setTag] = useState(todo.tag)
+  const id = todo.id
 
-  const handleInputChange = event => {
-    const { name, value } = event.target
-    setTodo({ ...todo, [name]: value })
-  };
+  const dispatch = useDispatch()
 
+  const onTitleChanged = e => setTitle(e.target.value)
+  const onTagChanged = e => setTag(e.target.value)
   const handleClickOpen = () => {
-    console.log(todo);
-    setOpen(true);
+    console.log('currently editing id:', id);
+    setOpen(true)
   };
-
   const handleClose = () => {
-    setOpen(false);
+    setOpen(false)
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    if (!todo.title) return;
-    props.updateTodo(todo)
-    handleClose();
+  const onSaveTodoClicked = async () => {
+    if (title && tag) {
+      try {
+        console.log('handling update of id:', id)
+        const resultAction = await dispatch(
+          updateTodo({ id, title, tag })
+          )
+        console.log('update done, id:', id)
+        console.log('new title:', title, 'new tag:', tag)
+        unwrapResult(resultAction)
+        handleClose()
+      } catch (err) {
+        console.error('Failed to update the todo: ', err)
+      }
+    }
   }
 
   return (
     <div>
-      <Button color="primary" onClick={handleClickOpen}>
-        <CreateOutlinedIcon />
-      </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Edit Todo Item</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Lets edit
-          </DialogContentText>
-            <TextField variant="outlined" type="text" placeholder="title" name="title" value={todo.title} onChange={handleInputChange} />
-            <TextField variant="outlined" type="text" placeholder="tag" name="tag" value={todo.tag} onChange={handleInputChange} />
+    <Button color="primary" onClick={handleClickOpen}>
+      <CreateOutlinedIcon />
+    </Button>
+    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">Edit Todo Item</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Lets edit
+        </DialogContentText>
+          <TextField 
+            variant="outlined" 
+            type="text" 
+            placeholder="title" 
+            name="title" 
+            value={title} 
+            onChange={onTitleChanged} 
+            onKeyPress={(ev) => {
+              if (ev.key === 'Enter') {
+                  onSaveTodoClicked()
+            }}} />
+          <TextField 
+            variant="outlined" 
+            type="text" 
+            placeholder="tag" 
+            name="tag" 
+            value={tag} 
+            onChange={onTagChanged}
+            onKeyPress={(ev) => {
+              if (ev.key === 'Enter') {
+                  onSaveTodoClicked()
+            }}} />
 
-            <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleSubmit} color="primary">
-              Update
-            </Button>
-        </DialogActions>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
+          <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={onSaveTodoClicked} color="primary">
+            Update
+          </Button>
+      </DialogActions>
+      </DialogContent>
+    </Dialog>
+  </div>
+  )
 }
-
-
-
-//<-- -->
-// import React, { useState } from 'react';
-
-// const EditTodoForm = props => {
-//   const [todo, setTodo] = useState(props.currentTodo);
-
-//   const handleInputChange = event => {
-//     const { name, value } = event.target
-//     setTodo({ ...todo, [name]: value })
-//   };
-
-//   return (
-//       <form onSubmit={event => {
-//         event.preventDefault();
-//         if (!todo.title) return;
-//         props.updateTodo(todo)
-//       }}>
-//         <label>Title</label>
-//         <input type="text" name="title" value={todo.title} onChange={handleInputChange} ></input>
-//         <label>Tag</label>
-//         <input type="text" name="tag" value={todo.tag} onChange={handleInputChange} ></input>
-
-//         <button>Update Todo</button>
-//         <button onClick={() => props.setEditing(false)}>Cancel</button>
-//       </form>
-//   )
-// };
