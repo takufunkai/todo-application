@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Divider, Paper, Grid, FormControl, 
-  InputLabel, Select, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Divider, Paper, Typography } from '@material-ui/core';
 import { selectTodoById, fetchTodos, selectCompleteTodos, selectIncompleteTodos } from './todosSlice';
 import { DeleteTodoButton } from './DeleteTodo'
 import { EditTodoForm } from './EditTodoForm'
@@ -36,7 +35,7 @@ const TodosList = props => {
   }, [todoStatus, dispatch])
 
   let doneContent
-  let undoneContent //eventually want to shift these to its own page
+  let undoneContent
 
   if (todoStatus === 'loading') {
     doneContent = <div className="loader">Loading...</div>
