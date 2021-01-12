@@ -1,44 +1,22 @@
 import React, { useEffect, useState } from 'react';
 
-import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import TodosList from './TodoList/TodosList';
 import { AddTodoForm } from './TodoList/AddTodoForm'
 import Header from './app/Header';
 import { Grid } from '@material-ui/core';
-import Home from './app/Home';
+import Home from './auth/Home';
 import axios from 'axios';
+import { useDispatch } from 'react-redux'
+import { checkLoginStatus } from './auth/authSlice'
+import UserForm from './auth/UserForm'
 
 function App() {
-  const [loggedInStatus, setLoggedInStatus] = useState('NOT_LOGGED_IN')
-  const [user, setUser] = useState({})
-
-  const checkLoginStatus = () => {
-    axios.get("http://localhost:3001/logged_in", { withCredentials: true }).then(response => {
-      if (response.data.logged_in && loggedInStatus === 'NOT_LOGGED_IN') {
-        setLoggedInStatus('LOGGED_IN')
-        setUser(response.data.user)
-      } else if(!response.data.logged_in & setLoggedInStatus === 'LOGGED_IN') {
-        setLoggedInStatus('NOT_LOGGED IN')
-        setUser({})
-      }
-    }).catch(error => {
-      console.log("check login error", error)
-    })
-  }
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    checkLoginStatus();
+    dispatch(checkLoginStatus());
   })
-
-  function handleLogin(data) {
-    setLoggedInStatus('LOGGED_IN')
-    setUser(data.user)
-  }
-
-  function handleLogout() {
-    setLoggedInStatus('NOT_LOGGED_IN')
-    setUser({})
-  }
 
   return (
     <Router>
@@ -51,20 +29,16 @@ function App() {
                 <Grid container justify='center' wrap='nowrap'>
                   <Grid item wrap='nowrap'>
                     <AddTodoForm />
-                    <TodosList {...props} loggedInStatus={loggedInStatus}/>
+                    <TodosList />
                   </Grid>
                 </Grid>
           </React.Fragment>
         )} />
-      <Route 
-        exact 
+      <Route
+        exact
         path={"/"}
         render={props => (
-          <Home 
-            {...props} 
-            handleLogin={handleLogin} 
-            loggedInStatus={loggedInStatus}
-            handleLogout={handleLogout} />
+          <UserForm />
         )} />
       <Route path="/completed" />
     </Router>

@@ -3,14 +3,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Divider, Paper } from '@material-ui/core';
 import { fetchTodos, selectCompleteTodos, selectIncompleteTodos } from './todosSlice';
 import { TodoItem } from './TodoItem'
+import { logoutUser } from '../auth/authSlice'
+import { useHistory } from 'react-router-dom'
 
 const TodosList = props => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const doneTodos = useSelector(selectCompleteTodos)
   const undoneTodos = useSelector(selectIncompleteTodos)
+  const loggedInStatus = useSelector(state => state.auth.loggedInStatus)
 
   const todoStatus = useSelector(state => state.todos.status)
   const error = useSelector(state => state.todos.error)
+
+  const onLogoutClicked = async () => {
+    try {
+      await dispatch(logoutUser())
+    } catch (err) {
+      console.error('Failed to save the todo: ', err)
+    }
+    console.log(loggedInStatus)
+    history.push('/')
+  }
 
   useEffect(() => {
     if (todoStatus === 'idle') {
@@ -51,7 +65,8 @@ const TodosList = props => {
         <hr/>
         <Paper>
           <h1>Task List</h1>
-          <h1>Status: {props.loggedInStatus}</h1>
+          <button onClick={onLogoutClicked}>Logout</button>
+          <h1>Status: {loggedInStatus}</h1>
           <Divider variant="middle" />
           {undoneContent}
           <Divider variant="middle" />
