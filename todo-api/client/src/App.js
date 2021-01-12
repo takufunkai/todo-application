@@ -15,11 +15,9 @@ function App() {
   const checkLoginStatus = () => {
     axios.get("http://localhost:3001/logged_in", { withCredentials: true }).then(response => {
       if (response.data.logged_in && loggedInStatus === 'NOT_LOGGED_IN') {
-        console.log('setting logged in')
         setLoggedInStatus('LOGGED_IN')
         setUser(response.data.user)
       } else if(!response.data.logged_in & setLoggedInStatus === 'LOGGED_IN') {
-        console.log('unsetting logged in')
         setLoggedInStatus('NOT_LOGGED IN')
         setUser({})
       }
@@ -30,12 +28,16 @@ function App() {
 
   useEffect(() => {
     checkLoginStatus();
-  }, [setLoggedInStatus])
+  })
 
   function handleLogin(data) {
-    checkLoginStatus()
     setLoggedInStatus('LOGGED_IN')
     setUser(data.user)
+  }
+
+  function handleLogout() {
+    setLoggedInStatus('NOT_LOGGED_IN')
+    setUser({})
   }
 
   return (
@@ -58,7 +60,11 @@ function App() {
         exact 
         path={"/"}
         render={props => (
-          <Home {...props} handleLogin={handleLogin} loggedInStatus={loggedInStatus} />
+          <Home 
+            {...props} 
+            handleLogin={handleLogin} 
+            loggedInStatus={loggedInStatus}
+            handleLogout={handleLogout} />
         )} />
       <Route path="/completed" />
     </Router>
