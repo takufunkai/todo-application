@@ -10,11 +10,9 @@ export const DeleteTodoButton = ({ id }) => {
 
   const handleDelete = async () => {
     try {
-      console.log('handling delete of id:', id)
       const resultAction = await dispatch(
         deleteTodo(id)
       )
-      console.log('deletion done, id:', id)
       unwrapResult(resultAction)
     } catch (err) {
       console.error('Failed to delete the todo: ', err)

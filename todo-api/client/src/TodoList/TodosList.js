@@ -4,14 +4,13 @@ import { Divider, Paper } from '@material-ui/core';
 import { fetchTodos, selectCompleteTodos, selectIncompleteTodos } from './todosSlice';
 import { TodoItem } from './TodoItem'
 import { logoutUser } from '../auth/authSlice'
-import { useHistory } from 'react-router-dom'
 
 const TodosList = props => {
   const dispatch = useDispatch()
-  const history = useHistory()
   const doneTodos = useSelector(selectCompleteTodos)
   const undoneTodos = useSelector(selectIncompleteTodos)
   const loggedInStatus = useSelector(state => state.auth.loggedInStatus)
+  const currentUserId = useSelector(state => state.auth.user.id)
 
   const todoStatus = useSelector(state => state.todos.status)
   const error = useSelector(state => state.todos.error)
@@ -23,14 +22,13 @@ const TodosList = props => {
       console.error('Failed to save the todo: ', err)
     }
     console.log(loggedInStatus)
-    history.push('/')
   }
 
   useEffect(() => {
-    if (todoStatus === 'idle') {
-      dispatch(fetchTodos())
+    if (todoStatus === 'idle' && currentUserId !== -1) {
+      dispatch(fetchTodos(currentUserId))
     }
-  }, [todoStatus, dispatch])
+  }, [todoStatus, currentUserId])
 
   let doneContent
   let undoneContent

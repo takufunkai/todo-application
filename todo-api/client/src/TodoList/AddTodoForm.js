@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Grid, TextField, Button } from '@material-ui/core'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
@@ -10,6 +10,7 @@ export const AddTodoForm = () => {
   const [title, setTitle] = useState('')
   const [tag, setTag] = useState('')
   const [addRequestStatus, setAddRequestStatus] = useState('idle')
+  const user_id = useSelector(state => state.auth.user.id)
 
   const dispatch = useDispatch()
 
@@ -23,7 +24,7 @@ export const AddTodoForm = () => {
       try {
         setAddRequestStatus('pending')
         const resultAction = await dispatch(
-          addNewTodo({ title, tag })
+          addNewTodo({ title, tag, user_id })
         )
         unwrapResult(resultAction)
         setTitle('')

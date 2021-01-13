@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react';
 
-import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
 import TodosList from './TodoList/TodosList';
 import { AddTodoForm } from './TodoList/AddTodoForm'
 import Header from './app/Header';
 import { Grid } from '@material-ui/core';
-import Home from './auth/Home';
-import axios from 'axios';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import { checkLoginStatus } from './auth/authSlice'
 import UserForm from './auth/UserForm'
 
 function App() {
   const dispatch = useDispatch()
+  const loggedInStatus = useSelector(state => state.auth.loggedInStatus)
 
   useEffect(() => {
     dispatch(checkLoginStatus());
-  })
+  }, [loggedInStatus])
+
+  const AuthRedirect = () => {
+    if (loggedInStatus === 'NOT_LOGGED_IN') {
+      return <Redirect to='/' />
+    } else {
+      return <Redirect to='/todolist' />
+    }
+  }
 
   return (
     <Router>
@@ -38,10 +45,18 @@ function App() {
         exact
         path={"/"}
         render={props => (
-          <UserForm />
+          <React.Fragment>
+                {/* <Header /> */}
+                <Grid container justify='center' wrap='nowrap'>
+                  <Grid item wrap='nowrap'>
+                    <UserForm />
+                  </Grid>
+                </Grid>
+          </React.Fragment>
         )} />
-      <Route path="/completed" />
+      <AuthRedirect />
     </Router>
+    
   );
 }
 

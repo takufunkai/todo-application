@@ -61,7 +61,7 @@ export default function Header() {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <List>
-            <ListItem button key='Tasks' component={Link} to={"/"}>
+            <ListItem button key='Tasks' component={Link} to={"/todolist"}>
                 <ListItemIcon>
                     <InboxIcon />
                 </ListItemIcon>

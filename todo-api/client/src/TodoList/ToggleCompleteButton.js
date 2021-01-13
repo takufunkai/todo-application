@@ -10,11 +10,9 @@ export const ToggleCompleteButton = ({ todo }) => {
 
   const handleToggle = async () => {
     try {
-      console.log('handling delete of id:', todo.id)
       const resultAction = await dispatch(
         toggleComplete(todo)
       )
-      console.log('toggling complete done, id:', todo.id)
       setCheck(!check)
       unwrapResult(resultAction)
     } catch (err) {

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 const initialState = {
   todos: [],
@@ -8,10 +9,11 @@ const initialState = {
 }
 
 //actions
-export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
+export const fetchTodos = createAsyncThunk('todos/fetchTodos', async userId => {
   const response = await axios.get('/api/v1/todos/')
   console.log(response.data, 'todosSlice: fetched from rails')
-  return response.data
+  console.log(response.data.filter(todo => todo.user_id === userId), userId)
+  return response.data.filter(todo => todo.user_id === userId)
 })
 
 export const addNewTodo = createAsyncThunk(
@@ -64,15 +66,13 @@ const todosSlice = createSlice({
       state.status = 'succeeded'
       // Add any fetched todos to the array
       state.todos = state.todos.concat(action.payload)
-      console.log('todosSlice: successfully fetched')
     },
     [fetchTodos.rejected]: (state, action) => {
       state.status = 'failed'
       state.error = action.error.message
     },
     [addNewTodo.fulfilled]: (state, action) => {
-      state.todos.push(action.payload)
-      console.log(state.todos.length)       
+      state.todos.push(action.payload)  
     },
     [deleteTodo.fulfilled]: (state, action) => {
       state.todos = state.todos.filter((todo) => todo.id !== action.payload)

@@ -4,9 +4,11 @@ import axios from 'axios'
 const initialState = {
   user: {
     email: '',
-    password: ''
+    password: '',
+    id: -1,
   },
-  loggedInStatus: 'NOT_LOGGED_IN'
+  loggedInStatus: 'NOT_LOGGED_IN',
+  authStatus: 'idle'
 }
 
 //actions
@@ -40,6 +42,7 @@ export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async => {
     axios.delete("http://localhost:3001/logout", { withCredentials : true})
+    console.log('delete method')
   }
 )
 
@@ -49,16 +52,21 @@ export const authSlice = createSlice({
   reducers: {},
   extraReducers: {
     [addNewUser.fulfilled]: (state, action) => {
-      // console.log("new user data:", action.payload)
     },
     [loginUser.fulfilled]: (state, action) => {
-      state.user = action.payload.user
-      state.loggedInStatus = 'LOGGED_IN'
+      if (action.payload.user === undefined) {
+        state.authStatus = 'bad_credentials'
+      } else {
+        state.user = action.payload.user
+        state.loggedInStatus = 'LOGGED_IN'
+        state.authStatus = 'idle'
+      }
       //include portion on gathering data for this specific user
     },
     [logoutUser.fulfilled]: (state,_) => {
       state.user = initialState.user
       state.loggedInStatus = 'NOT_LOGGED_IN'
+      console.log(state.loggedInStatus)
       console.log('successfully logged out')
     },
     [checkLoginStatus.fulfilled]: (state, action) => {

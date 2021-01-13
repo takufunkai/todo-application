@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { addNewUser, loginUser } from './authSlice'
 import { TextField } from '@material-ui/core'
-import { useHistory } from 'react-router-dom'
 
 const UserForm = () => {
   const dispatch = useDispatch()
-  const history = useHistory()
   const [status, setStatus] = useState('login')
   const description = status === 'sign_up' ? 'Register' : 'Login'
+  const authStatus = useSelector(state => state.auth.authStatus)
 
   const [state, setState] = useState({
     email: "",
@@ -58,7 +57,6 @@ const UserForm = () => {
           email:"",
           password: ""
         })
-        history.push('/todolist')
       } catch (err) {
         console.error('Failed to login user: ', err)
       }
@@ -91,7 +89,11 @@ const UserForm = () => {
         required/> : null}
 
         <button onClick={onSubmit}>{description}</button>
-        <button onClick={toggleStatus}>{status === 'sign_up' ? "Have an account?" : "Don't have an account"}</button> 
+        <button onClick={toggleStatus}>{status === 'sign_up' ? "Have an existing account" : "Don't have an account"}</button> 
+        <div>
+          <h1>{authStatus === 'bad_credentials' && status === 'login' ? 
+            'Wrong username or password' : null} </h1>
+        </div>
     </div>
   )
 }

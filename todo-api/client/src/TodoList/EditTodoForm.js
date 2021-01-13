@@ -36,8 +36,7 @@ export const EditTodoForm = ({ todo }) => {
         const resultAction = await dispatch(
           updateTodo({ id, title, tag })
           )
-        console.log('update done, id:', id)
-        console.log('new title:', title, 'new tag:', tag)
+        console.log('Updated: new title:', title, 'new tag:', tag)
         unwrapResult(resultAction)
         handleClose()
       } catch (err) {
