@@ -25,7 +25,7 @@ export const addNewUser = createAsyncThunk(
     console.log('adding:', initialUser)
     const response = await axios.post("http://localhost:3001/registrations", { user: initialUser }, { withCredentials: true })
     console.log('registered user:', response.data)
-    return response.data
+    return response.data.user
   }
 )
 
@@ -51,6 +51,9 @@ export const authSlice = createSlice({
   reducers: {},
   extraReducers: {
     [addNewUser.fulfilled]: (state, action) => {
+      state.authStatus = 'successful_registration'
+      state.loggedInStatus = 'LOGGED_IN'
+      state.user = action.payload
     },
     [loginUser.fulfilled]: (state, action) => {
       if (action.payload.user === undefined) {
