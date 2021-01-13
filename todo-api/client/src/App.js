@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     dispatch(checkLoginStatus());
-  }, [loggedInStatus])
+  }, [dispatch])
 
   const AuthRedirect = () => {
     if (loggedInStatus === 'NOT_LOGGED_IN') {
@@ -34,7 +34,7 @@ function App() {
           <React.Fragment>
                 {/* <Header /> */}
                 <Grid container justify='center' wrap='nowrap'>
-                  <Grid item wrap='nowrap'>
+                  <Grid item>
                     <AddTodoForm />
                     <TodosList />
                   </Grid>
@@ -48,7 +48,7 @@ function App() {
           <React.Fragment>
                 {/* <Header /> */}
                 <Grid container justify='center' wrap='nowrap'>
-                  <Grid item wrap='nowrap'>
+                  <Grid item>
                     <UserForm />
                   </Grid>
                 </Grid>

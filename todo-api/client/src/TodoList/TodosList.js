@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Divider, Paper } from '@material-ui/core';
-import { fetchTodos, selectCompleteTodos, selectIncompleteTodos } from './todosSlice';
+import { fetchTodos, selectCompleteTodos, selectIncompleteTodos, loggedOut } from './todosSlice';
 import { TodoItem } from './TodoItem'
 import { logoutUser } from '../auth/authSlice'
 
@@ -9,11 +9,11 @@ const TodosList = props => {
   const dispatch = useDispatch()
   const doneTodos = useSelector(selectCompleteTodos)
   const undoneTodos = useSelector(selectIncompleteTodos)
-  const loggedInStatus = useSelector(state => state.auth.loggedInStatus)
   const currentUserId = useSelector(state => state.auth.user.id)
-
   const todoStatus = useSelector(state => state.todos.status)
   const error = useSelector(state => state.todos.error)
+  const [fetch, setFetch] = useState(false)
+
 
   const onLogoutClicked = async () => {
     try {
@@ -21,14 +21,19 @@ const TodosList = props => {
     } catch (err) {
       console.error('Failed to save the todo: ', err)
     }
-    console.log(loggedInStatus)
+    console.log('clicked logout for:', currentUserId)
   }
 
   useEffect(() => {
-    if (todoStatus === 'idle' && currentUserId !== -1) {
+    setFetch(true)
+    if (currentUserId > -1 && fetch) {
       dispatch(fetchTodos(currentUserId))
     }
-  }, [todoStatus, currentUserId])
+    return () => { 
+      dispatch(loggedOut()) 
+      setFetch(false)
+    }
+  }, [dispatch, fetch, currentUserId])
 
   let doneContent
   let undoneContent
@@ -64,7 +69,7 @@ const TodosList = props => {
         <Paper>
           <h1>Task List</h1>
           <button onClick={onLogoutClicked}>Logout</button>
-          <h1>Status: {loggedInStatus}</h1>
+          <h1>Status: {currentUserId}</h1>
           <Divider variant="middle" />
           {undoneContent}
           <Divider variant="middle" />

@@ -6,7 +6,7 @@ import { TextField } from '@material-ui/core'
 
 const UserForm = () => {
   const dispatch = useDispatch()
-  const [status, setStatus] = useState('login')
+  const [status, setStatus] = useState('login') //determine form type
   const description = status === 'sign_up' ? 'Register' : 'Login'
   const authStatus = useSelector(state => state.auth.authStatus)
 

@@ -42,7 +42,6 @@ export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async => {
     axios.delete("http://localhost:3001/logout", { withCredentials : true})
-    console.log('delete method')
   }
 )
 
@@ -59,15 +58,12 @@ export const authSlice = createSlice({
       } else {
         state.user = action.payload.user
         state.loggedInStatus = 'LOGGED_IN'
-        state.authStatus = 'idle'
+        state.authStatus = 'succeeded'
       }
-      //include portion on gathering data for this specific user
     },
     [logoutUser.fulfilled]: (state,_) => {
       state.user = initialState.user
       state.loggedInStatus = 'NOT_LOGGED_IN'
-      console.log(state.loggedInStatus)
-      console.log('successfully logged out')
     },
     [checkLoginStatus.fulfilled]: (state, action) => {
       if (action.payload.logged_in && state.loggedInStatus === 'NOT_LOGGED_IN') {

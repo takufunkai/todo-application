@@ -11,8 +11,6 @@ const initialState = {
 //actions
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async userId => {
   const response = await axios.get('/api/v1/todos/')
-  console.log(response.data, 'todosSlice: fetched from rails')
-  console.log(response.data.filter(todo => todo.user_id === userId), userId)
   return response.data.filter(todo => todo.user_id === userId)
 })
 
@@ -57,7 +55,11 @@ export const toggleComplete = createAsyncThunk(
 const todosSlice = createSlice({
   name: 'todos',
   initialState,
-  reducers: {},
+  reducers: {
+    loggedOut(state, _) {
+      state.todos = []
+    }
+  },
   extraReducers: {
     [fetchTodos.pending]: (state, action) => {
       state.status = 'loading'
@@ -65,7 +67,8 @@ const todosSlice = createSlice({
     [fetchTodos.fulfilled]: (state, action) => {
       state.status = 'succeeded'
       // Add any fetched todos to the array
-      state.todos = state.todos.concat(action.payload)
+      state.todos = action.payload
+      console.log('Done! Here is the todos for current user:', action.payload)
     },
     [fetchTodos.rejected]: (state, action) => {
       state.status = 'failed'
@@ -94,6 +97,8 @@ const todosSlice = createSlice({
 })
 
 export default todosSlice.reducer
+
+export const { loggedOut } = todosSlice.actions
 
 //state selectors
 export const selectAllTodos = state => state.todos.todos
