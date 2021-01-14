@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
-import { Grid, TextField, Button } from '@material-ui/core'
+import { Grid, TextField, Button, Checkbox, FormControlLabel, InputLabel, Select, MenuItem } from '@material-ui/core'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-
+import { togglePrioritySort, changeSort } from './todosSlice'
+import SortIcon from '@material-ui/icons/Sort';
 import { addNewTodo } from './todosSlice'
 
 export const AddTodoForm = () => {
   const [title, setTitle] = useState('')
   const [tag, setTag] = useState('')
-  const [dueDate, setDueDate] = useState('2021-1-25')
+  const [dueDate, setDueDate] = useState(null)
   const [addRequestStatus, setAddRequestStatus] = useState('idle')
   const user_id = useSelector(state => state.auth.user.id)
+  const prioritySort = useSelector(state => state.todos.prioritySort)
 
   const dispatch = useDispatch()
 
@@ -19,7 +21,11 @@ export const AddTodoForm = () => {
   const onTagChanged = e => setTag(e.target.value)
   const onDueDateChanged = e => setDueDate(e.target.value)
 
-  const canSave = [title].every(Boolean) && addRequestStatus === 'idle'
+  const handlePriorityChange = e => dispatch(togglePrioritySort())
+
+  const handleSortChange = e => dispatch(changeSort(e.target.value))
+
+  const canSave = [title, dueDate].every(Boolean) && addRequestStatus === 'idle'
 
   const onSaveTodoClicked = async () => {
     if (canSave) {
@@ -40,10 +46,11 @@ export const AddTodoForm = () => {
   }
 
   return (
-    <Grid container xs={20} spacing={4}>
-        <Grid item xs>
+    <Grid container spacing={3} alignItems='center'>
+        <Grid item>
             <TextField 
-                label="Title"
+                label="Todo"
+                variant='outlined'
                 type="text" 
                 name="todoTitle" 
                 value={title} 
@@ -57,9 +64,10 @@ export const AddTodoForm = () => {
                     }
                 }} />
         </Grid>
-        <Grid item xs> 
+        <Grid item> 
           <TextField 
             label="Tag"
+            variant='outlined'
             type="text" 
             name="todoTag" 
             value={tag} 
@@ -73,8 +81,9 @@ export const AddTodoForm = () => {
                 }
             }} />
           </Grid>
-          <Grid item xs>
+          <Grid item>
             <TextField
+            variant='outlined'
             id="dueDate"
             label="Deadline"
             type="date"
@@ -89,10 +98,39 @@ export const AddTodoForm = () => {
               }
             }}
             />
-        </Grid>
-      <Button type="submit" color="primary" onClick={onSaveTodoClicked}>
-          <AddCircleOutlineIcon height={2}/>
-      </Button>
+          </Grid>
+          <Grid item>
+            <Button type="submit" color="primary" onClick={onSaveTodoClicked}>
+              <AddCircleOutlineIcon height={2}/>
+            </Button>
+          </Grid>
+          <Grid item>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={prioritySort}
+                onChange={handlePriorityChange}
+                name="checkedB"
+                color="primary"
+              />
+          }
+        label="Priorities First"
+          />
+          </Grid>
+          <Grid item>
+          <InputLabel id="select-tag-to-display">Sort by deadline</InputLabel>
+            <Select
+              id="select-tag-to-display"
+              defaultValue='by_date_down'
+              onChange={handleSortChange}>
+              <MenuItem value={'by_date_down'}>
+                Ascending
+              </MenuItem>
+              <MenuItem value={'by_date_up'}>
+                Descending
+              </MenuItem>
+            </Select>  
+          </Grid>
     </Grid>
   )
 }

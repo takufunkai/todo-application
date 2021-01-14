@@ -32,12 +32,18 @@ function App() {
         exact 
         render={props => (
           <React.Fragment>
+            <Grid container direction='column' justify='flex-end' spacing={4}>
+              <Grid item>
                 <Header />
-                <Grid container justify='center' wrap='nowrap'>
-                  <Grid item>
-                    <TodosList />
-                  </Grid>
+              </Grid>
+              <Grid item container>
+                <Grid item xs={2} />
+                <Grid item xs={8}>
+                  <TodosList />
                 </Grid>
+                <Grid item xs={2} />
+              </Grid>
+            </Grid>
           </React.Fragment>
         )} />
       <Route

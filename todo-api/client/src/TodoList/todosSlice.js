@@ -5,7 +5,11 @@ const initialState = {
   todos: [],
   status: 'idle',
   error: null,
-  allTags: ['Inbox',]
+  currentTag: "Inbox",
+  search: '',
+  sort: 'by_date_down',
+  prioritySort: true,
+  allTags: []
 }
 
 //actions
@@ -52,13 +56,37 @@ export const toggleComplete = createAsyncThunk(
   }
 )
 
+export const togglePriority = createAsyncThunk(
+  'todos/togglePriority',
+  async priorityTodo => {
+    console.log('toggling "priority" id:', priorityTodo.id, priorityTodo.priority)
+    await axios.patch('/api/v1/todos/' + priorityTodo.id, { todo: {
+        priority: !priorityTodo.priority
+    } })
+    return priorityTodo.id
+  }
+)
+
 const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
     loggedOut(state, _) {
-      state.todos = [] //clears the current state of todos
+      state.todos = []
+      state.allTags = ['Inbox',]
     },
+    toggleCurrentTag(state, action) {
+      state.currentTag = action.payload
+    },
+    handleSearch(state, action) {
+      state.search = action.payload
+    },
+    togglePrioritySort(state, action) {
+      state.prioritySort = !state.prioritySort
+    },
+    changeSort(state, action) {
+      state.sort = action.payload
+    }
   },
   extraReducers: {
     [fetchTodos.pending]: (state, action) => {
@@ -98,18 +126,61 @@ const todosSlice = createSlice({
         existingTodo.done = !existingTodo.done
       }
     },
+    [togglePriority.fulfilled]: (state, action) => {
+      const existingTodo = state.todos.find(todo => todo.id === action.payload)
+      if (existingTodo) {
+        existingTodo.priority = !existingTodo.priority
+      }
+    }
   }
 })
 
 export default todosSlice.reducer
 
-export const { loggedOut, searchTodo } = todosSlice.actions
+export const { loggedOut, handleSearch, searchTodo, toggleCurrentTag, togglePrioritySort, changeSort } = todosSlice.actions
 
 //state selectors
+
 export const selectAllTodos = state => state.todos.todos
 
-export const selectCompleteTodos = state => state.todos.todos.filter(todo => todo.done)
+export const selectIncompleteTodos = state => (
+  state.todos.todos
+      .filter(todo => //filter todos based on done-ness, tags(if any) and current search(if any)
+      (todo.tag === state.todos.currentTag 
+        || state.todos.currentTag === 'Inbox') 
+          && !todo.done 
+            && todo.title.includes(state.todos.search))
+      .sort(state.todos.sort === 'by_date_up' //sort the items based on user preference
+        ? (d2, d1) => new Date(d1.due_date).getTime() - new Date(d2.due_date).getTime() 
+        : (d1, d2) => new Date(d1.due_date).getTime() - new Date(d2.due_date).getTime())
+      .sort(state.todos.prioritySort //sort the items by priority (if activated)
+        ? (d1, d2) => (
+            d1.priority === d2.priority 
+              ? 0 
+              : d1.priority 
+                ? -1 
+                : 1) 
+        : undefined )
+)
 
-export const selectIncompleteTodos = state => state.todos.todos.filter(todo => !todo.done)
+export const selectCompleteTodos = state => (
+  state.todos.todos
+    .filter(todo => 
+      (todo.tag === state.todos.currentTag 
+        || state.todos.currentTag === 'Inbox') 
+          && todo.done 
+            && todo.title.includes(state.todos.search))
+    .sort(state.todos.sort === 'by_date_up' 
+      ? (d2, d1) => new Date(d1.due_date).getTime() - new Date(d2.due_date).getTime() 
+      : (d1, d2) => new Date(d1.due_date).getTime() - new Date(d2.due_date).getTime())
+    .sort(state.todos.prioritySort
+    ? (d1, d2) => (
+        d1.priority === d2.priority 
+          ? 0 
+          : d1.priority 
+            ? -1 
+            : 1) 
+    : undefined )
+)
 
 export const selectTodoById = (state, todoId) => state.todos.todos.find(todo => todo.id === todoId)

@@ -40,7 +40,7 @@ module Api::V1
       def todo_params
         params
             .require(:todo)
-            .permit(:title, :tag, :done, :user_id, :due_date)
+            .permit(:title, :tag, :done, :user_id, :due_date, :priority)
       end
   
     end

@@ -1,24 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Divider, Paper, TextField, ListItem, Collapse, ListItemText, List, Select, MenuItem, Grid, InputLabel } from '@material-ui/core';
+import { Divider, Paper, TextField, ListItem, Collapse, ListItemText, List, Select, MenuItem, Grid, InputLabel, Typography } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { fetchTodos, loggedOut, selectAllTodos } from './todosSlice';
+import { fetchTodos, loggedOut, selectAllTodos, toggleCurrentTag, selectCompleteTodos, selectIncompleteTodos, handleSearch } from './todosSlice';
 import { AddTodoForm } from './AddTodoForm'
 import { CTodoList } from './_TodoList'
 
 const TodosList = props => {
   const dispatch = useDispatch()
-
-  const [search, setSearch] = useState('')
-  const [showTag, setShowTag] = useState('Inbox')
-
-  const sortByDate = (d1, d2) => new Date(d1.due_date).getTime() - new Date(d2.due_date).getTime()
-  const filterBySearch = todo => todo.title.toLowerCase().startsWith(search)
-
-  const todosByTag = useSelector(selectAllTodos).filter(todo => showTag === 'Inbox' ? true : todo.tag === showTag ) //selecting todos, then filtering by tags
-  const doneTodos = todosByTag.filter(todo => todo.done).filter(filterBySearch).sort(sortByDate).reverse()          //take out done todos, and sort them by date
-  const undoneTodos = todosByTag.filter(todo => !todo.done).filter(filterBySearch).sort(sortByDate).reverse()       //take out undone todos, and sort them by date
+  const doneTodos = useSelector(selectCompleteTodos) //note: these todos are sorted/filtered based on tags, search and sort preferences...
+  const undoneTodos = useSelector(selectIncompleteTodos) //... within the todosSlice
 
   const allTags = useSelector(state => state.todos.allTags)
   const currentUserId = useSelector(state => state.auth.user.id)
@@ -32,11 +24,11 @@ const TodosList = props => {
   };
 
   const handleSearchChange = e => {
-    setSearch(e.target.value)
+    dispatch(handleSearch(e.target.value.toLowerCase()))
   }
 
   const handleTagChange = (event) => {
-    setShowTag(event.target.value);
+    dispatch(toggleCurrentTag(event.target.value))
   };
 
   useEffect(() => {
@@ -61,13 +53,27 @@ const TodosList = props => {
       ? doneContent = doneTodos.map(todo => (
         <CTodoList key={todo.id} todo={todo} />
     )) 
-      : doneContent = <p>No completed todos to show.</p>
+      : doneContent = (
+        <Grid container spacing={2}>
+          <Grid item />
+          <Grid item>
+            <p>No todos to show. Why not start something?</p>
+          </Grid>
+        </Grid>
+      )
 
       undoneTodos.length > 0 
       ? undoneContent = undoneTodos.map(todo => (
         <CTodoList key={todo.id} todo={todo} />
     )) 
-      : undoneContent = <p>No incomplete todos to show.</p>
+      : undoneContent = (
+        <Grid container spacing={2}>
+          <Grid item />
+          <Grid item>
+            <p>No todos to show. Why not take a break?</p>
+          </Grid>
+        </Grid>
+      )
   } else if (todoStatus === 'failed') {
     doneContent = <div>{error}</div>
     undoneContent = <div>{error}</div>
@@ -75,45 +81,55 @@ const TodosList = props => {
 
   return (
     <div>
-      <div className="todos-list">
-        <Paper>
-          <Grid container>
-            <Grid item>
-              <TextField
-                placeholder='search'
-                variant='outlined'
-                onChange={handleSearchChange} 
-                width='100%'/>
-                <br/>
-            </Grid>
-            <Grid item>
-            <InputLabel id="select-tag-to-display">Tags</InputLabel>
-              <Select
-                id="select-tag-to-display"
-                value={showTag}
-                onChange={handleTagChange}
-                style={{margin: 10,
-                  minWidth: 120,}}>
-                {allTags.map(tag => (
-                  <MenuItem value={tag}>{tag}</MenuItem>
-                ))}
-              </Select>
-            </Grid>
+      <Grid container direction='column'>
+        <Grid item container>
+          <Grid item xs={4} />
+          <Grid item xs={4}>
+            <TextField
+              fullWidth
+              placeholder='Search todos'
+              variant='outlined'
+              onChange={handleSearchChange} 
+              size='100%'/>
+            <br/>
           </Grid>
-          <AddTodoForm />
-          {undoneContent}
-          <Divider variant="middle" />
-          <ListItem button onClick={handleClick}>
-            <ListItemText primary="Completed Todos" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {doneContent}
-            </List>
-          </Collapse>
+          <Grid item xs={2} />
+          <Grid item xs={2}>
+            <InputLabel id="select-tag-to-display">Show by Tags</InputLabel>
+            <Select
+              id="select-tag-to-display"
+              defaultValue='Inbox'
+              onChange={handleTagChange}
+              style={{margin: 10,
+                minWidth: 120,}}>
+              {allTags.map(tag => (
+                <MenuItem value={tag}>{tag}</MenuItem>
+              ))}
+            </Select>
+          </Grid>
+        </Grid>
+        <Paper>
+          <Grid container direction='column'>
+            <ListItem>
+              <AddTodoForm />
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Todos" secondary={<>{undoneTodos.length} remaining</>}/>
+            </ListItem>
+            {undoneContent}
+            <Divider variant="middle" />
+            <ListItem button onClick={handleClick}>
+              <ListItemText primary="Completed Todos" secondary={<>{doneTodos.length} completed</>}/>
+              {open ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {doneContent}
+              </List>
+            </Collapse>
+          </Grid>
         </Paper>
-      </div>
+      </Grid>
     </div>
   )
 };
