@@ -47,7 +47,7 @@ export const EditTodoForm = ({ todo }) => {
 
   return (
     <div>
-    <Button color="primary" onClick={handleClickOpen}>
+    <Button color="primary" onClick={handleClickOpen} style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>
       <CreateOutlinedIcon />
     </Button>
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -83,7 +83,7 @@ export const EditTodoForm = ({ todo }) => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={onSaveTodoClicked} color="primary">
+          <Button onClick={onSaveTodoClicked} color="primary" >
             Update
           </Button>
       </DialogActions>

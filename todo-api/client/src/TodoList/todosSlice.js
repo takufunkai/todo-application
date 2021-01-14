@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
 
 const initialState = {
   todos: [],
   status: 'idle',
-  error: null
+  error: null,
+  allTags: ['Inbox',]
 }
 
 //actions
@@ -57,8 +57,8 @@ const todosSlice = createSlice({
   initialState,
   reducers: {
     loggedOut(state, _) {
-      state.todos = []
-    }
+      state.todos = [] //clears the current state of todos
+    },
   },
   extraReducers: {
     [fetchTodos.pending]: (state, action) => {
@@ -68,6 +68,8 @@ const todosSlice = createSlice({
       state.status = 'succeeded'
       // Add any fetched todos to the array
       state.todos = action.payload
+      //Assigning tags
+      action.payload.map(todo => !state.allTags.includes(todo.tag) && todo.tag !== '' ? state.allTags.push(todo.tag) : null)
       console.log('Done! Here is the todos for current user:', action.payload)
     },
     [fetchTodos.rejected]: (state, action) => {
@@ -75,7 +77,10 @@ const todosSlice = createSlice({
       state.error = action.error.message
     },
     [addNewTodo.fulfilled]: (state, action) => {
-      state.todos.push(action.payload)  
+      state.todos.push(action.payload)
+      if (!state.allTags.includes(action.payload.tag) && action.payload.tag !== '') {
+        state.allTags.push(action.payload.tag)
+      }
     },
     [deleteTodo.fulfilled]: (state, action) => {
       state.todos = state.todos.filter((todo) => todo.id !== action.payload)
@@ -98,7 +103,7 @@ const todosSlice = createSlice({
 
 export default todosSlice.reducer
 
-export const { loggedOut } = todosSlice.actions
+export const { loggedOut, searchTodo } = todosSlice.actions
 
 //state selectors
 export const selectAllTodos = state => state.todos.todos

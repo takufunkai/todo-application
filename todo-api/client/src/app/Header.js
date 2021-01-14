@@ -1,17 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { logoutUser } from '../auth/authSlice'
+import { Toolbar, Typography, CssBaseline, AppBar, Button } from '@material-ui/core'
 
 const drawerWidth = 240;
 
@@ -40,18 +31,32 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header() {
   const classes = useStyles();
+  const dispatch = useDispatch()
+
+  const onLogoutClicked = async () => {
+    try {
+      await dispatch(logoutUser())
+    } catch (err) {
+      console.error('Failed to save the todo: ', err)
+    }
+  }
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" noWrap>
             Todo List -- get it done
           </Typography>
+          <Button onClick={onLogoutClicked}>
+            <Typography variant="h6" noWrap>
+              Logout
+            </Typography>
+          </Button>
         </Toolbar>
       </AppBar>
-      <Drawer
+      {/* <Drawer
         className={classes.drawer}
         variant="permanent"
         classes={{
@@ -79,7 +84,7 @@ export default function Header() {
       </Drawer>
       <main className={classes.content}>
         <Toolbar />
-      </main>
+      </main> */}
     </div>
   );
 }

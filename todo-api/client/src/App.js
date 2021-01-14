@@ -32,10 +32,9 @@ function App() {
         exact 
         render={props => (
           <React.Fragment>
-                {/* <Header /> */}
+                <Header />
                 <Grid container justify='center' wrap='nowrap'>
                   <Grid item>
-                    <AddTodoForm />
                     <TodosList />
                   </Grid>
                 </Grid>
