@@ -49,7 +49,7 @@ export const AddTodoForm = () => {
     <Grid container spacing={3} alignItems='center'>
         <Grid item>
             <TextField 
-                label="Todo"
+                label="Tasks"
                 variant='outlined'
                 type="text" 
                 name="todoTitle" 

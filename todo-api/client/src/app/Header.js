@@ -33,7 +33,7 @@ export default function Header() {
           <Grid container justify='space-around' alignItems='center'>
             <Grid item>
               <Typography variant="h4" noWrap>
-                Todo List
+                Yet another to-do list
               </Typography>
             </Grid>
             <Grid item>

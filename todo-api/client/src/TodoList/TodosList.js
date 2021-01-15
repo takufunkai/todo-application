@@ -57,7 +57,7 @@ const TodosList = props => {
         <Grid container spacing={2}>
           <Grid item />
           <Grid item>
-            <p>No todos to show. Why not start something?</p>
+            <p>No tasks to show. Why not start something?</p>
           </Grid>
         </Grid>
       )
@@ -70,7 +70,7 @@ const TodosList = props => {
         <Grid container spacing={2}>
           <Grid item />
           <Grid item>
-            <p>No todos to show. Why not take a break?</p>
+            <p>No tasks to show. Why not take a break?</p>
           </Grid>
         </Grid>
       )
@@ -87,7 +87,7 @@ const TodosList = props => {
           <Grid item xs={4}>
             <TextField
               fullWidth
-              placeholder='Search todos'
+              placeholder='Search tasks'
               variant='outlined'
               onChange={handleSearchChange} 
               size='100%'/>
@@ -114,12 +114,12 @@ const TodosList = props => {
               <AddTodoForm />
             </ListItem>
             <ListItem>
-              <ListItemText primary="Todos" secondary={<>{undoneTodos.length} remaining</>}/>
+              <ListItemText primary="Tasks" secondary={<>{undoneTodos.length} remaining</>}/>
             </ListItem>
             {undoneContent}
             <Divider variant="middle" />
             <ListItem button onClick={handleClick}>
-              <ListItemText primary="Completed Todos" secondary={<>{doneTodos.length} completed</>}/>
+              <ListItemText primary="Completed Tasks" secondary={<>{doneTodos.length} completed</>}/>
               {open ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={open} timeout="auto" unmountOnExit>
