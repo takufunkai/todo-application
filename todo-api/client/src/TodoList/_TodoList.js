@@ -8,7 +8,7 @@ import { TogglePriorityButton } from './TogglePriorityButton'
 
 export const CTodoList = ({ todo }) => {
   return (
-    <List dense={false}>
+    <List dense={true}>
         <ListItem>
           <ListItemAvatar>
             <ToggleCompleteButton todo={todo} />

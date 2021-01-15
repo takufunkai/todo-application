@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { addNewUser, loginUser } from './authSlice'
-import { TextField, Snackbar } from '@material-ui/core'
+import { TextField, Snackbar, Grid, Paper, Typography } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert';
 
 function Alert(props) {
@@ -137,59 +137,79 @@ const UserForm = () => {
   
 
   return (
-    <div>
-      <h1>{description}</h1>
-      <TextField
-        
-        type='email'
-        variant='filled' 
-        name='email' 
-        value={state.email} 
-        onChange={handleChange} 
-        helperText={emailValidMessage}
-        required
-        label="Email"
-        onKeyPress={(ev) => {
-          if (ev.key === 'Enter') {
-              onSubmit()
-          }
-        }}/>
-        <br/>
-      <TextField 
-        type='password' 
-        name='password' 
-        variant='filled' 
-        value={state.password} 
-        onChange={handleChange} 
-        helperText={passwordValidMessage}
-        required
-        label="Password"
-        onKeyPress={(ev) => {
-          if (ev.key === 'Enter') {
-              onSubmit()
-          }
-        }}/>
-        <br/>
-      {status === 'sign_up' ? 
-        <TextField 
-        type='password' 
-        variant='filled' 
-        name='password_confirmation' 
-        value={state.password_confirmation} 
-        onChange={handleChange} 
-        required
-        label="Password confirmation"
-        onKeyPress={(ev) => {
-          if (ev.key === 'Enter') {
-              onSubmit()
-          }
-        }}/> 
-        : null}
-      <br/>
-      <button onClick={onSubmit}>{description}</button>
-      <button onClick={toggleStatus}>{statusMessage}</button>
-      <PopUp type={type} />
-    </div>
+    <Grid container direction='column'>
+      <Grid item style={{marginTop: 150}} />
+      <Grid item>
+        <Paper style={{marginLeft: '40%', marginRight: '40%', paddingBottom: 90, paddingTop: 30}}>
+          <Grid container direction ='column'>
+            <Grid item container>
+              <Grid item xs={2} />
+              <Grid item xs={8}>
+                  <div>
+                  <Typography>
+                    Just another To-do List
+                  </Typography>
+                  <Typography variant= 'h3'>
+                    {description}
+                  </Typography>
+                  <TextField
+                    
+                    type='email'
+                    variant='filled' 
+                    name='email' 
+                    value={state.email} 
+                    onChange={handleChange} 
+                    helperText={emailValidMessage}
+                    required
+                    label="Email"
+                    onKeyPress={(ev) => {
+                      if (ev.key === 'Enter') {
+                          onSubmit()
+                      }
+                    }}/>
+                    <br/>
+                  <TextField 
+                    type='password' 
+                    name='password' 
+                    variant='filled' 
+                    value={state.password} 
+                    onChange={handleChange} 
+                    helperText={passwordValidMessage}
+                    required
+                    label="Password"
+                    onKeyPress={(ev) => {
+                      if (ev.key === 'Enter') {
+                          onSubmit()
+                      }
+                    }}/>
+                    <br/>
+                  {status === 'sign_up' ? 
+                    <TextField 
+                    type='password' 
+                    variant='filled' 
+                    name='password_confirmation' 
+                    value={state.password_confirmation} 
+                    onChange={handleChange} 
+                    required
+                    label="Password confirmation"
+                    onKeyPress={(ev) => {
+                      if (ev.key === 'Enter') {
+                          onSubmit()
+                      }
+                    }}/> 
+                    : null}
+                  <br/>
+                  <button onClick={onSubmit}>{description}</button>
+                  <button onClick={toggleStatus}>{statusMessage}</button>
+                  <PopUp type={type} />
+                </div>
+              </Grid>
+              <Grid item xs={2} />
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
+    </Grid>
   )
 }
 

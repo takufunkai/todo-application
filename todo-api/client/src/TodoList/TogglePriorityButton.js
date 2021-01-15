@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { togglePriority } from './todosSlice'
 import { Checkbox } from '@material-ui/core'
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-import PriorityHighOutlinedIcon from '@material-ui/icons/PriorityHighOutlined';
+import ErrorIcon from '@material-ui/icons/Error';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 export const TogglePriorityButton = ({ todo }) => {
   const dispatch = useDispatch()
@@ -25,7 +25,7 @@ export const TogglePriorityButton = ({ todo }) => {
   }
 
   return (
-    <Checkbox onClick={handleToggle} icon={<PriorityHighIcon color='primary'/>} checkedIcon={<PriorityHighOutlinedIcon color='secondary' />} checked={check} name="priority" />
+    <Checkbox onClick={handleToggle} icon={<ErrorOutlineIcon color='secondary'/>} checkedIcon={<ErrorIcon color='primary'/>} checked={check} name="priority" />
 
   )
 }

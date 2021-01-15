@@ -9,6 +9,7 @@ const initialState = {
   search: '',
   sort: 'by_date_down',
   prioritySort: true,
+  darkMode: false,
   allTags: []
 }
 
@@ -86,6 +87,9 @@ const todosSlice = createSlice({
     },
     changeSort(state, action) {
       state.sort = action.payload
+    },
+    switchedDarkMode(state, action) {
+      state.darkMode = !state.darkMode
     }
   },
   extraReducers: {
@@ -137,7 +141,7 @@ const todosSlice = createSlice({
 
 export default todosSlice.reducer
 
-export const { loggedOut, handleSearch, searchTodo, toggleCurrentTag, togglePrioritySort, changeSort } = todosSlice.actions
+export const { loggedOut, handleSearch, searchTodo, toggleCurrentTag, togglePrioritySort, changeSort, switchedDarkMode } = todosSlice.actions
 
 //state selectors
 

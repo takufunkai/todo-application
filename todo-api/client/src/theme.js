@@ -1,17 +1,41 @@
-import { createMuiTheme } from '@material-ui/core/styles'
+export const darkTheme = {
+  palette: {
+    primary: {
+      main: '#3378af'
+    },
+    secondary: {
+      main: '#b1b04f'
+    },
+    type: 'dark'
+  },
 
-const theme = createMuiTheme({
+  typography: {
+    "fontFamily": 'JetBrains Mono',
+    "fontSize": 16,
+    "fontWeightLight": 300,
+    "fontWeightRegular": 400,
+    "fontWeightMedium": 500
+  }
+
+}
+
+export const lightTheme = {
   palette: {
     primary: {
       main: '#ffac33'
     },
     secondary: {
-      main: '#ff784e'
-    }
+      main: '#00e5ff'
+    },
+    type: 'light'
   },
-  status: {
 
+  typography: {
+    "fontFamily": 'JetBrains Mono',
+    "fontSize": 16,
+    "fontWeightLight": 300,
+    "fontWeightRegular": 400,
+    "fontWeightMedium": 500
   }
-})
 
-export default theme
+}

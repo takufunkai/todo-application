@@ -20,7 +20,7 @@ export const DeleteTodoButton = ({ id }) => {
   }
 
   return (
-    <Button onClick={handleDelete} style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>
+    <Button onClick={handleDelete} color='primary' style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>
       <DeleteIcon />
     </Button>
   )

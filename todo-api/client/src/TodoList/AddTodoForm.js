@@ -46,10 +46,11 @@ export const AddTodoForm = () => {
   }
 
   return (
-    <Grid container spacing={3} alignItems='center'>
+    <Grid container spacing={2} wrap='nowrap' alignItems='center'>
         <Grid item>
             <TextField 
                 label="Tasks"
+                color='secondary'
                 variant='outlined'
                 type="text" 
                 name="todoTitle" 
@@ -67,6 +68,7 @@ export const AddTodoForm = () => {
         <Grid item> 
           <TextField 
             label="Tag"
+            color='secondary'
             variant='outlined'
             type="text" 
             name="todoTag" 
@@ -83,6 +85,7 @@ export const AddTodoForm = () => {
           </Grid>
           <Grid item>
             <TextField
+            color='secondary'
             variant='outlined'
             id="dueDate"
             label="Deadline"
@@ -100,7 +103,11 @@ export const AddTodoForm = () => {
             />
           </Grid>
           <Grid item>
-            <Button type="submit" color="primary" onClick={onSaveTodoClicked}>
+            <Button 
+              type="submit" 
+              color="primary" 
+              onClick={onSaveTodoClicked} 
+              style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>
               <AddCircleOutlineIcon height={2}/>
             </Button>
           </Grid>

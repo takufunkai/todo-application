@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Divider, Paper, TextField, ListItem, Collapse, ListItemText, List, Select, MenuItem, Grid, InputLabel, Typography } from '@material-ui/core';
+import { Divider, Paper, TextField, ListItem, Collapse, ListItemText, List, Select, MenuItem, Grid, InputLabel } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { fetchTodos, loggedOut, selectAllTodos, toggleCurrentTag, selectCompleteTodos, selectIncompleteTodos, handleSearch } from './todosSlice';
+import { fetchTodos, loggedOut, toggleCurrentTag, selectCompleteTodos, selectIncompleteTodos, handleSearch } from './todosSlice';
 import { AddTodoForm } from './AddTodoForm'
 import { CTodoList } from './_TodoList'
 

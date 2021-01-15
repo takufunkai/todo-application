@@ -21,7 +21,7 @@ export const ToggleCompleteButton = ({ todo }) => {
   }
 
   return (
-    <Checkbox checked={check} onClick={handleToggle} />
+    <Checkbox color='primary' checked={check} onClick={handleToggle} />
 
   )
 }
