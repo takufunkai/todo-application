@@ -14,7 +14,7 @@ const initialState = {
 //actions
 
 export const checkLoginStatus = createAsyncThunk('auth/checkLoginStatus', async () => {
-  const response = await axios.get("http://localhost:3001/logged_in", { withCredentials: true })
+  const response = await axios.get("https://mysterious-gorge-55099.herokuapp.com/logged_in", { withCredentials: true })
   return response.data
 })
 
@@ -23,7 +23,7 @@ export const addNewUser = createAsyncThunk(
   'auth/addNewUser',
   async initialUser => {
     console.log('adding:', initialUser)
-    const response = await axios.post("http://localhost:3001/registrations", { user: initialUser }, { withCredentials: true })
+    const response = await axios.post("https://mysterious-gorge-55099.herokuapp.com/registrations", { user: initialUser }, { withCredentials: true })
     console.log('registered user:', response.data)
     return response.data.user
   }
@@ -32,7 +32,7 @@ export const addNewUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async loginUser => {
-    const response = await axios.post("http://localhost:3001/sessions", { user: loginUser }, { withCredentials: true })
+    const response = await axios.post("https://mysterious-gorge-55099.herokuapp.com/sessions", { user: loginUser }, { withCredentials: true })
     console.log('logged in user:', response.data.user)
     return response.data
   }
@@ -41,7 +41,7 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async => {
-    axios.delete("http://localhost:3001/logout", { withCredentials : true})
+    axios.delete("https://mysterious-gorge-55099.herokuapp.com/logout", { withCredentials : true})
   }
 )
 

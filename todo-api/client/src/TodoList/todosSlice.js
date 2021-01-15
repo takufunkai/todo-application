@@ -15,14 +15,14 @@ const initialState = {
 
 //actions
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async userId => {
-  const response = await axios.get('/api/v1/todos/')
+  const response = await axios.get('https://mysterious-gorge-55099.herokuapp.com/api/v1/todos')
   return response.data.filter(todo => todo.user_id === userId)
 })
 
 export const addNewTodo = createAsyncThunk(
   'todos/addNewTodos',
   async initialTodo => {
-    const response = await axios.post('/api/v1/todos', { todo: initialTodo })
+    const response = await axios.post('https://mysterious-gorge-55099.herokuapp.com/api/v1/todos', { todo: initialTodo })
     console.log('added todo:', response.data)
     return response.data
   }
@@ -32,7 +32,7 @@ export const deleteTodo = createAsyncThunk(
   'todos/deleteTodo',
   async id => {
     console.log('initializing delete of:', id)
-    await axios.delete( '/api/v1/todos/' + id)
+    await axios.delete( 'https://mysterious-gorge-55099.herokuapp.com/api/v1/todos/' + id)
     return id;
   }
 );
@@ -41,7 +41,7 @@ export const updateTodo = createAsyncThunk(
   'todos/updateTodo',
   async updatedTodo => {
     console.log('initializing update of:', updatedTodo.id)
-    await axios.patch('/api/v1/todos/' + updatedTodo.id, { todo: updatedTodo })
+    await axios.patch('https://mysterious-gorge-55099.herokuapp.com/api/v1/todos/' + updatedTodo.id, { todo: updatedTodo })
     return updatedTodo
   }
 )
@@ -50,7 +50,7 @@ export const toggleComplete = createAsyncThunk(
   'todos/toggleComplete',
   async doneTodo => {
     console.log('toggling "done" id:', doneTodo.id)
-    await axios.patch('/api/v1/todos/' + doneTodo.id, { todo: {
+    await axios.patch('https://mysterious-gorge-55099.herokuapp.com/api/v1/todos/' + doneTodo.id, { todo: {
         done: !doneTodo.done
     } })
     return doneTodo.id
@@ -61,7 +61,7 @@ export const togglePriority = createAsyncThunk(
   'todos/togglePriority',
   async priorityTodo => {
     console.log('toggling "priority" id:', priorityTodo.id, priorityTodo.priority)
-    await axios.patch('/api/v1/todos/' + priorityTodo.id, { todo: {
+    await axios.patch('https://mysterious-gorge-55099.herokuapp.com/api/v1/todos/' + priorityTodo.id, { todo: {
         priority: !priorityTodo.priority
     } })
     return priorityTodo.id
