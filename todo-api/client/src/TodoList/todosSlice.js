@@ -119,6 +119,9 @@ const todosSlice = createSlice({
     },
     [updateTodo.fulfilled]: (state, action) => {
       const existingTodo = state.todos.find(todo => todo.id === action.payload.id)
+      if (!state.allTags.includes(action.payload.tag) && action.payload.tag !== '') {
+        state.allTags.push(action.payload.tag)
+      }
       if (existingTodo) {
         existingTodo.title = action.payload.title
         existingTodo.tag = action.payload.tag

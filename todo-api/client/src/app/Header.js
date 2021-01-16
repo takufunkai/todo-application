@@ -37,18 +37,13 @@ export default function Header() {
       <CssBaseline />
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
-          <Grid container justify='center' alignItems='center'>
+          <Grid container justify='center' alignItems='space-around'>
             <Grid item xs={4}>
               <Typography variant="h4" noWrap>
                 Yet another to-do list
               </Typography>
             </Grid>
-            <Grid container alignItems='center' item xs={4}>
-              <Grid item xs={4}>
-                <Typography>
-                  {currentUser}
-                </Typography>
-              </Grid>
+            <Grid container alignItems='center' justify='space-between' item xs={4} spacing={2}>
               <Grid item xs={4}>
                 <FormControlLabel
                   control={<Switch checked={!darkMode} color='secondary' onChange={onThemeToggle} name="themeToggle" />}
@@ -59,6 +54,11 @@ export default function Header() {
                 <Button variant='contained' color='secondary' onClick={onLogoutClicked}>
                   Logout
                 </Button>
+              </Grid>
+              <Grid item xs={4} >
+                <Typography>
+                  {currentUser}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
