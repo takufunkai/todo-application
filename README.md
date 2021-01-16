@@ -11,7 +11,9 @@ A0218061N
 ## Remarks
 
 Rails 6.1 API
+
 React Boot-strapped with create-react-app
+
 NOTE: React (Client) file is nested in todo-api
 
 ### Heroku
