@@ -4,7 +4,6 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { Grid, TextField, Button, Checkbox, FormControlLabel, InputLabel, Select, MenuItem } from '@material-ui/core'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import { togglePrioritySort, changeSort } from './todosSlice'
-import SortIcon from '@material-ui/icons/Sort';
 import { addNewTodo } from './todosSlice'
 
 export const AddTodoForm = () => {

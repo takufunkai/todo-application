@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
 import TodosList from './TodoList/TodosList';
 import Header from './app/Header';
-import { Grid, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { useDispatch, useSelector} from 'react-redux'
 import { checkLoginStatus } from './auth/authSlice'
 import UserForm from './auth/UserForm'
@@ -11,10 +11,11 @@ import { createMuiTheme } from '@material-ui/core/styles'
 import { lightTheme, darkTheme } from './theme'
 
 function App() {
-  const darkMode = useSelector(state => state.todos.darkMode)
   const dispatch = useDispatch()
-  const loggedInStatus = useSelector(state => state.auth.loggedInStatus)
 
+  //toggles theme
+  const darkMode = useSelector(state => state.todos.darkMode)
+  const loggedInStatus = useSelector(state => state.auth.loggedInStatus)
   const currentTheme = createMuiTheme(darkMode ? darkTheme : lightTheme)
 
   useEffect(() => {

@@ -13,7 +13,7 @@ const initialState = {
   allTags: []
 }
 
-//actions
+//AJAX actions
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async userId => {
   const response = await axios.get('https://mysterious-gorge-55099.herokuapp.com/api/v1/todos')
   return response.data.filter(todo => todo.user_id === userId)
@@ -98,7 +98,7 @@ const todosSlice = createSlice({
     },
     [fetchTodos.fulfilled]: (state, action) => {
       state.status = 'succeeded'
-      // Add any fetched todos to the array
+      //Add any fetched todos to the array
       state.todos = action.payload
       //Assigning tags
       action.payload.map(todo => !state.allTags.includes(todo.tag) && todo.tag !== '' ? state.allTags.push(todo.tag) : null)
@@ -111,7 +111,7 @@ const todosSlice = createSlice({
     [addNewTodo.fulfilled]: (state, action) => {
       state.todos.push(action.payload)
       if (!state.allTags.includes(action.payload.tag) && action.payload.tag !== '') {
-        state.allTags.push(action.payload.tag)
+        state.allTags.push(action.payload.tag) //set tags for newly added todos
       }
     },
     [deleteTodo.fulfilled]: (state, action) => {
@@ -120,7 +120,7 @@ const todosSlice = createSlice({
     [updateTodo.fulfilled]: (state, action) => {
       const existingTodo = state.todos.find(todo => todo.id === action.payload.id)
       if (!state.allTags.includes(action.payload.tag) && action.payload.tag !== '') {
-        state.allTags.push(action.payload.tag)
+        state.allTags.push(action.payload.tag) //sets tags for edited todos
       }
       if (existingTodo) {
         existingTodo.title = action.payload.title

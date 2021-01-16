@@ -22,7 +22,6 @@ export const checkLoginStatus = createAsyncThunk('auth/checkLoginStatus', async 
 export const addNewUser = createAsyncThunk(
   'auth/addNewUser',
   async initialUser => {
-    console.log('adding:', initialUser)
     const response = await axios.post("https://mysterious-gorge-55099.herokuapp.com/registrations", { user: initialUser }, { withCredentials: true })
     console.log('registered user:', response.data)
     return response.data.user

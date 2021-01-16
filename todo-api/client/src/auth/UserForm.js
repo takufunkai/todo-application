@@ -12,9 +12,10 @@ function Alert(props) {
 const UserForm = () => {
   const dispatch = useDispatch()
   const [status, setStatus] = useState('login') //determine form type
-  const description = status === 'sign_up' ? 'Register' : 'Login'
   const [open, setOpen] = useState(false)
   const [type, setType] = useState('idle')
+
+  const description = status === 'sign_up' ? 'Register' : 'Login'
 
   const initialState = {
     email: '',
@@ -57,7 +58,7 @@ const UserForm = () => {
     setOpen(false);
   };
 
-  const PopUp = ({type}) => {
+  const PopUp = ({type}) => { //error/success messages
     let popMessage
     let severity
     if (type === 'sign_up_fail') {

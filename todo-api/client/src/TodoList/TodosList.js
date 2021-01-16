@@ -9,7 +9,7 @@ import { CTodoList } from './_TodoList'
 
 const TodosList = props => {
   const dispatch = useDispatch()
-  const doneTodos = useSelector(selectCompleteTodos) //note: these todos are sorted/filtered based on tags, search and sort preferences...
+  const doneTodos = useSelector(selectCompleteTodos) //these todos are sorted/filtered based on tags, search and sort preferences...
   const undoneTodos = useSelector(selectIncompleteTodos) //... within the todosSlice
 
   const allTags = useSelector(state => state.todos.allTags)
