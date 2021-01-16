@@ -5,13 +5,13 @@ import { deleteTodo } from './todosSlice'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Button } from '@material-ui/core'
 
-export const DeleteTodoButton = ({ id }) => {
+export const DeleteTodoButton = ({ todo }) => {
   const dispatch = useDispatch()
 
   const handleDelete = async () => {
     try {
       const resultAction = await dispatch(
-        deleteTodo(id)
+        deleteTodo(todo)
       )
       unwrapResult(resultAction)
     } catch (err) {

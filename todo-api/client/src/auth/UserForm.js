@@ -96,7 +96,11 @@ const UserForm = () => {
       if (validRegistration) {
         try {
           const resultAction = await dispatch(
-            addNewUser(state)
+            addNewUser({
+              email: state.email.toLowerCase(),
+              password: state.password,
+              password_confirmation: state.password_confirmation
+            })
           )
           unwrapResult(resultAction)
           setState({
@@ -117,11 +121,12 @@ const UserForm = () => {
         setType('sign_up_fail')
       }
     } else {
-      const email = state.email
-      const password = state.password
       try {
         const resultAction = await dispatch(
-          loginUser({ email, password })
+          loginUser({ 
+            email: state.email.toLowerCase(),
+            password: state.password
+          })
         )
         unwrapResult(resultAction)
         setState({

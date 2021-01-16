@@ -9,7 +9,7 @@ import { addNewTodo } from './todosSlice'
 export const AddTodoForm = () => {
   const [title, setTitle] = useState('')
   const [tag, setTag] = useState('')
-  const [dueDate, setDueDate] = useState(null)
+  const [dueDate, setDueDate] = useState('')
   const [addRequestStatus, setAddRequestStatus] = useState('idle')
   const user_id = useSelector(state => state.auth.user.id)
   const prioritySort = useSelector(state => state.todos.prioritySort)
@@ -88,6 +88,7 @@ export const AddTodoForm = () => {
             variant='outlined'
             id="dueDate"
             label="Deadline"
+            defaultValue='25-1-2021'
             type="date"
             value={dueDate}
             InputLabelProps={{

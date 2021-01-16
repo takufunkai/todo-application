@@ -30,10 +30,10 @@ export const addNewTodo = createAsyncThunk(
 
 export const deleteTodo = createAsyncThunk(
   'todos/deleteTodo',
-  async id => {
-    console.log('initializing delete of:', id)
-    await axios.delete( 'https://mysterious-gorge-55099.herokuapp.com/api/v1/todos/' + id)
-    return id;
+  async todo => {
+    console.log('initializing delete of:', todo.id)
+    await axios.delete( 'https://mysterious-gorge-55099.herokuapp.com/api/v1/todos/' + todo.id)
+    return todo;
   }
 );
 
@@ -115,7 +115,10 @@ const todosSlice = createSlice({
       }
     },
     [deleteTodo.fulfilled]: (state, action) => {
-      state.todos = state.todos.filter((todo) => todo.id !== action.payload)
+      state.todos = state.todos.filter((todo) => todo.id !== action.payload.id)
+      if (action.payload.tag && state.todos.find(todo => todo.tag === action.payload.tag) === undefined) {
+        state.allTags = state.allTags.filter(tag => tag !== action.payload.tag) //removes the tag if no other todo shares same tag
+      }
     },
     [updateTodo.fulfilled]: (state, action) => {
       const existingTodo = state.todos.find(todo => todo.id === action.payload.id)
@@ -125,6 +128,10 @@ const todosSlice = createSlice({
       if (existingTodo) {
         existingTodo.title = action.payload.title
         existingTodo.tag = action.payload.tag
+        existingTodo.due_date = action.payload.due_date
+      }
+      if (action.payload.tag && state.todos.find(todo => todo.tag === action.payload.tag) === undefined) {
+        state.allTags = state.allTags.filter(tag => tag !== action.payload.tag) //removes the tag if no other todo shares same tag
       }
     },
     [toggleComplete.fulfilled]: (state, action) => {

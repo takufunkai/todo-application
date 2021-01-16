@@ -20,7 +20,7 @@ export const CTodoList = ({ todo }) => {
           <ListItemSecondaryAction >
             <Grid container alignItems='center'>
               <Grid item>
-                <DeleteTodoButton id={todo.id} />
+                <DeleteTodoButton todo={todo} />
               </Grid>
                 {!todo.done ? <EditTodoForm todo={todo} />: null}
               <Grid item>

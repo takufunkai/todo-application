@@ -15,12 +15,14 @@ export const EditTodoForm = ({ todo }) => {
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState(todo.title)
   const [tag, setTag] = useState(todo.tag)
+  const [dueDate, setDueDate] = useState(todo.due_date)
   const id = todo.id
 
   const dispatch = useDispatch()
 
   const onTitleChanged = e => setTitle(e.target.value)
   const onTagChanged = e => setTag(e.target.value)
+  const onDueDateChanged = e => setDueDate(e.target.value)
   const handleClickOpen = () => {
     console.log('currently editing id:', id);
     setOpen(true)
@@ -30,13 +32,13 @@ export const EditTodoForm = ({ todo }) => {
   };
 
   const onSaveTodoClicked = async () => {
-    if (title && tag) {
+    if (title && tag && dueDate) {
       try {
         console.log('handling update of id:', id)
         const resultAction = await dispatch(
-          updateTodo({ id, title, tag })
+          updateTodo({ id, title, tag, due_date: dueDate })
           )
-        console.log('Updated: new title:', title, 'new tag:', tag)
+        console.log('Updated: new title:', title, 'new tag:', tag, 'new deadline:', dueDate)
         unwrapResult(resultAction)
         handleClose()
       } catch (err) {
@@ -78,6 +80,23 @@ export const EditTodoForm = ({ todo }) => {
               if (ev.key === 'Enter') {
                   onSaveTodoClicked()
             }}} />
+          <TextField
+            color='secondary'
+            variant='outlined'
+            id="dueDate"
+            label="Deadline"
+            type="date"
+            value={dueDate}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={onDueDateChanged}
+            onKeyPress={(ev) => {
+              if (ev.key === 'Enter') {
+                onSaveTodoClicked()
+              }
+            }}
+          />
 
           <DialogActions>
           <Button onClick={handleClose} color="primary">
