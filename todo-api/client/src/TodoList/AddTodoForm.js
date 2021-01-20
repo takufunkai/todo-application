@@ -9,7 +9,7 @@ import { addNewTodo } from './todosSlice'
 export const AddTodoForm = () => {
   const [title, setTitle] = useState('')
   const [tag, setTag] = useState('')
-  const [dueDate, setDueDate] = useState('')
+  const [dueDate, setDueDate] = useState('25-1-2021')
   const [addRequestStatus, setAddRequestStatus] = useState('idle')
   const user_id = useSelector(state => state.auth.user.id)
   const prioritySort = useSelector(state => state.todos.prioritySort)

@@ -163,7 +163,7 @@ export const selectIncompleteTodos = state => (
       (todo.tag === state.todos.currentTag 
         || state.todos.currentTag === 'Inbox') 
           && !todo.done 
-            && todo.title.includes(state.todos.search))
+            && todo.title.toLowerCase().includes(state.todos.search))
       .sort(state.todos.sort === 'by_date_up' //sort the items based on user preference
         ? (d2, d1) => new Date(d1.due_date).getTime() - new Date(d2.due_date).getTime() 
         : (d1, d2) => new Date(d1.due_date).getTime() - new Date(d2.due_date).getTime())
